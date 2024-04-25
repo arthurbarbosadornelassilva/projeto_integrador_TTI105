@@ -1,20 +1,40 @@
 import pygame
 from pygame.locals import *
-from sys import exit 
+from sys import exit
+from random import choice
 
 pygame.init()
 
+#definição de variáveis pré-definidas
+
+#variáveis da tela
 larguraTela = 1280
 alturaTela = 720
-tela = pygame.display.set_mode((larguraTela, alturaTela)) 
+tela = pygame.display.set_mode((larguraTela, alturaTela))
+
+#variável da fonte
 fonte = pygame.font.SysFont("Arial", 20, True, False)
-mensagem_ativa = False
-pergunta_feita = False
+
+#variáveis das perguntas
+mensagemAtiva = False
+perguntaFeita = False
+
+#variáveis de respostas ---> ainda não foram utilizadas
+respostaAcertada = []          #lista que guarda as perguntas que foram acertadas e permite contagem total das respostas corretas
+respostaErrada = []            #lista que guarda as perguntas que foram acertadas e permite contagem total das respostas erradas
+respostas = (1, 2, 3)          #variável que define qual respostas das três está correta, por enquanto está definido como uma tupla de 1 a 3
+ultimaEscolha = 0              #variável que define qual foi a última escolha de resposta do jogador
+
+#variáveis do inimigo
+coordenadaEscolhida = False
+coordenadaInimigo = ""
+ultimaCoordenada = 0
+
 
 relogio = pygame.time.Clock()
 
-eixoX = 100
-eixoY = 100
+eixoX = 550
+eixoY = 300
 
 while True:
     relogio.tick(60)
@@ -25,36 +45,73 @@ while True:
             pygame.quit()
             exit()
 
-    if not mensagem_ativa:
+    if not mensagemAtiva:
         if pygame.key.get_pressed()[K_LEFT]:
             eixoX -= 5
-        if pygame.key.get_pressed()[K_RIGHT]:
+        elif pygame.key.get_pressed()[K_RIGHT]:
             eixoX += 5
-        if pygame.key.get_pressed()[K_UP]:
+        elif pygame.key.get_pressed()[K_UP]:
             eixoY -= 5
-        if pygame.key.get_pressed()[K_DOWN]:
+        elif pygame.key.get_pressed()[K_DOWN]:
             eixoY += 5
     
-    rectPersonagem = pygame.draw.rect(tela, (255, 0, 0), (eixoX, eixoY, 50, 50))
-    if not pergunta_feita:
-        rectTeste = pygame.draw.rect(tela, (0, 0 , 255), (300, 300, 50, 50))
+    rectPersonagem = pygame.draw.rect(tela, (255, 0, 0), (eixoX, eixoY, 50, 50)) 
+    
+    #teste do aparecimento randoômico do inimigo pela tela
+    coordenadasPossiveis = [(300, 150, 50, 50), (300, 450, 50, 50), (800, 150, 50, 50), (800, 450, 50, 50)] #coordenadas possíveis na tela em questão
+    
+    if not coordenadaEscolhida: 
+        if ultimaCoordenada == 0:
+            coordenadaEscolhida = True
+            print("Coordenada escolhida")                       #Teste para ver se apenas uma passagem de código é feita
+            coordenadaInimigo = choice(coordenadasPossiveis)    #esxolhe uma das quatro coordenadas previamente definidas, o código permite que mais ou menos coordenadas sejam definidas 
+            perguntaFeita = False                               #define a variável de pergunta feita como falsa, ao ser feita dentro desse if, o código garante que logo após a coordenada 
+                                                                #ser escolhida apenas um retângulo será desenhado na tela
+        else:
+            while ultimaCoordenada == coordenadaInimigo:
+                coordenadaEscolhida = True
+                print("Coordenada escolhida")
+                coordenadaInimigo = choice(coordenadasPossiveis)
+                perguntaFeita = False
+                                                            
+    if not perguntaFeita:
+        rectTeste = pygame.draw.rect(tela, (0, 0 , 255), coordenadaInimigo)
+    else:
+        coordenadaEscolhida = False
 
     #teste do texto na tela
+    mouseX, mouseY = pygame.mouse.get_pos()
+    #rect_mouse = pygame.draw.rect(tela, (0, 255, 0), (mouseX-5, mouseY-5, 10, 10))
+    rectMouse = pygame.Rect(mouseX - 5, mouseY - 5, 10, 10)
+
     pergunta = fonte.render("Isso é um exemplo de pergunta...", True, (0, 0, 0))
-    resposta1 = fonte.render("Essa seria a resposta1...", True, (0, 0, 0))
-    resposta2 = fonte.render("Essa seria a resposta2...", True, (0, 0, 0))
-    resposta3 = fonte.render("Essa seria a resposta3...", True, (0, 0, 0))
+    resposta1 = fonte.render("A) Essa seria a resposta1...", True, (0, 0, 0))
+    resposta2 = fonte.render("B) Essa seria a resposta2...", True, (0, 0, 0))
+    resposta3 = fonte.render("C) Essa seria a resposta3...", True, (0, 0, 0))
     
-    if rectPersonagem.colliderect(rectTeste) and not pergunta_feita:
-        mensagem_ativa = True
-        if mensagem_ativa:
+    if rectPersonagem.colliderect(rectTeste) and not perguntaFeita:
+        mensagemAtiva = True
+        if mensagemAtiva:
             pygame.draw.rect(tela, (255, 255, 255), (250, 400, 800, 250)) #essa linha desenha o fundo do texto
             tela.blit(pergunta, (300, 430)) #essa linha desenha o texto da pergunta
-            tela.blit(resposta1, (300, 500))
-            tela.blit(resposta2, (300, 550))
-            tela.blit(resposta3, (300, 600))
-            if pygame.key.get_pressed()[K_z]:
-                pergunta_feita = True
-                mensagem_ativa = False
+
+            tela.blit(resposta1, (300, 500)) #essa linha desenha o texto da resposta 1
+            rectP1 = pygame.draw.rect(tela, (100, 255, 100), (300, 500, 20, 20)) #essa linha desenha a área de colisão da resposta 1
+            if rectMouse.colliderect(rectP1) and pygame.mouse.get_pressed(3)[0]:
+                perguntaFeita = True
+                mensagemAtiva = False
+                
+            tela.blit(resposta2, (300, 550)) #essa linha desenha o texto da resposta 2
+            rectP2 = pygame.draw.rect(tela, (100, 255, 100), (300, 550, 20, 20)) #essa linha desenha a área de colisão da resposta 2
+            if rectMouse.colliderect(rectP2) and pygame.mouse.get_pressed(3)[0]:
+                perguntaFeita = True
+                mensagemAtiva = False
+
+            tela.blit(resposta3, (300, 600)) #essa linha desenha o texto da resposta 3
+            rectP3 = pygame.draw.rect(tela, (100, 255, 100), (300, 600, 20, 20)) #essa linha desenha a área de colisão da resposta 3
+            if rectMouse.colliderect(rectP3) and pygame.mouse.get_pressed(3)[0]:
+                perguntaFeita = True
+                mensagemAtiva = False
+    
     
     pygame.display.update()
