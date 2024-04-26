@@ -42,8 +42,6 @@ while True:
     rectPersonagem = pygame.draw.rect(tela, (255,0,0), (x, y, 40, 40))
 
     #definição character inimigo + perguntas
-    
-    #if pergunta_feita:
     rectInimigo = pygame.draw.rect(tela , (0, 255, 0), (480, 360, 40, 40))
 
     pergunta = fonte.render("Isso é um exemplo de pergunta...", True, (0, 0, 0))
@@ -64,6 +62,7 @@ while True:
 
     #definição limites labirinto
     keys = pygame.key.get_pressed()
+
     if keys[pygame.K_LEFT]:
         cor=tela.get_at((x-1,y))
         cor2=tela.get_at((x-1,y+39))
@@ -91,6 +90,6 @@ while True:
         if (cor.r<=40) and (cor2.r<=40):
             y=y+5
             if y>720:
-                y=720                
+                y=720
 
-    pygame.display.flip()
+    pygame.display.update()
