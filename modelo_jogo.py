@@ -53,7 +53,7 @@ while True:
             tela.blit(resposta1, (300, 500))
             tela.blit(resposta2, (300, 550))
             tela.blit(resposta3, (300, 600))
-            if pygame.key.get_pressed()[K_z]:
+            if pygame.key.get_pressed()[K_ESCAPE]:
                 pergunta_feita = True
                 mensagem_ativa = False
     
