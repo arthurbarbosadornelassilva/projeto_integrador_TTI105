@@ -10,7 +10,7 @@ larguraTela = 960
 alturaTela = 720
 x = 100
 y = 100
-plano_de_fundo = pygame.image.load("labirinto3.jpg")
+plano_de_fundo = pygame.image.load("img\labirinto3.jpg")
 fonte = pygame.font.SysFont("Arial", 20, True, False)
 mensagem_ativa = False
 pergunta_feita = True
@@ -42,7 +42,7 @@ while True:
     rectPersonagem = pygame.draw.rect(tela, (255,0,0), (x, y, 40, 40))
 
     #definição character inimigo + perguntas
-    rectInimigo = pygame.draw.rect(tela , (0, 255, 0), (480, 360, 40, 40))
+    rectInimigo = pygame.draw.rect(tela , (0, 250, 90), (480, 360, 40, 40))
 
     pergunta = fonte.render("Isso é um exemplo de pergunta...", True, (0, 0, 0))
     resposta1 = fonte.render("Essa seria a resposta1...", True, (0, 0, 0))
