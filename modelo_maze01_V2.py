@@ -6,11 +6,11 @@ pygame.init()
 pygame.display.set_caption('Vac-Man.exe')
 
 larguraTela = 960
-alturaTela = 720
+alturaTela = 680
 x = 300
 y = 300
 tela = pygame.display.set_mode((larguraTela, alturaTela))
-plano_de_fundo = pygame.image.load('img\Sem título.png')
+plano_de_fundo = pygame.image.load('..\img\Maze.png')
 relogio = pygame.time.Clock()
 
 while True:
@@ -36,6 +36,12 @@ while True:
 
     tela.fill((0,0,0))
     tela.blit(plano_de_fundo, (-10, 0))
-    pygame.draw.rect(tela, (0, 255, 255), (x, y, lado_x, lado_y))
+    protagonista = pygame.draw.rect(tela, (0, 255, 255), (x, y, lado_x, lado_y))
+
+    #definindo o retângulo para passar de fase:
+    proxFase = pygame.draw.rect(tela, (255, 0, 0), (900, 550, 40, 70))
+    if protagonista.colliderect(proxFase):
+        pygame.quit()
+        exit()
 
     pygame.display.update()
