@@ -94,11 +94,24 @@ while True:
         if mensagemAtiva:
             pygame.draw.rect(tela, (255, 255, 255), (250, 400, 800, 250)) #essa linha desenha o fundo do texto
             tela.blit(pergunta, (300, 430)) #essa linha desenha o texto da pergunta
-            tela.blit(resposta1, (300, 500))
-            tela.blit(resposta2, (300, 550))
-            tela.blit(resposta3, (300, 600))
-            if pygame.key.get_pressed()[K_z]:
-                pergunta_feita = True
-                mensagem_ativa = False
+
+            tela.blit(resposta1, (300, 500)) #essa linha desenha o texto da resposta 1
+            rectP1 = pygame.draw.rect(tela, (100, 255, 100), (300, 500, 20, 20)) #essa linha desenha a área de colisão da resposta 1
+            if rectMouse.colliderect(rectP1) and pygame.mouse.get_pressed(3)[0]:
+                perguntaFeita = True
+                mensagemAtiva = False
+                
+            tela.blit(resposta2, (300, 550)) #essa linha desenha o texto da resposta 2
+            rectP2 = pygame.draw.rect(tela, (100, 255, 100), (300, 550, 20, 20)) #essa linha desenha a área de colisão da resposta 2
+            if rectMouse.colliderect(rectP2) and pygame.mouse.get_pressed(3)[0]:
+                perguntaFeita = True
+                mensagemAtiva = False
+
+            tela.blit(resposta3, (300, 600)) #essa linha desenha o texto da resposta 3
+            rectP3 = pygame.draw.rect(tela, (100, 255, 100), (300, 600, 20, 20)) #essa linha desenha a área de colisão da resposta 3
+            if rectMouse.colliderect(rectP3) and pygame.mouse.get_pressed(3)[0]:
+                perguntaFeita = True
+                mensagemAtiva = False
+    
     
     pygame.display.update()
