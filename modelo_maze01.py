@@ -80,17 +80,6 @@ while True:
             y == y
         if cor_cima != cor_padrão or cor_baixo != cor_padrão:
             y -= 5
-    
-    # tela.fill((0,0,0))
-    # tela.blit(plano_de_fundo, (0, 0))
-    # #definindo protagonista
-    # protagonista = pygame.draw.rect(tela, (255, 255, 50), (x, y, lado_x, lado_y))
-
-    # #definindo o retângulo para passar de fase:
-    # proxFase = pygame.draw.rect(tela, (255, 0, 0), (900, 565, 40, 40))
-    # if protagonista.colliderect(proxFase):
-    #     pygame.quit()
-    #     exit()
 
     #definindo os inimigos:
     class inimigos:
