@@ -1,5 +1,4 @@
-'''
-pip install -r requirements
-''' 
+#pip install -r requirements
+
 pygame
 mysql-connector-python

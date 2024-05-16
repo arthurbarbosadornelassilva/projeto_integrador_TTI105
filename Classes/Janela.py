@@ -14,7 +14,7 @@ class Janela():
         text = font.SysFont(fonte, tamanhoFonte, True, False).render(texto, True, corTexto, corFundo)
         Surface.blit(text)
 
-    def adicionarSprite(self):
+    def adicionarSprite(self, protagonista, inimigo):
         pass
     
     def adicionarCampoDeEntrada(self):

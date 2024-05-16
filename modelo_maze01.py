@@ -81,7 +81,6 @@ while True:
         if cor_cima != cor_padrão or cor_baixo != cor_padrão:
             y -= 5
 
-
     #definindo os inimigos:
     class inimigos:
 
