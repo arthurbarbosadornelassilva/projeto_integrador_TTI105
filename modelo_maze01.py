@@ -81,16 +81,29 @@ while True:
         if cor_cima != cor_padrão or cor_baixo != cor_padrão:
             y -= 5
 
+
     #definindo os inimigos:
     class inimigos:
 
-        def base(posicao):
-            return pygame.draw.rect(tela, (255, 0, 0), posicao)
+        def retangulos_inimigos(posicao):
+            skin_inimigo = pygame.image.load("img\Virus01.png")
+            inimigo = skin_inimigo.get_rect()
+            inimigo.topleft = (posicao)
+            tela.blit(skin_inimigo, inimigo)
+            return inimigo
         
-    inimigo1 = inimigos.base((350, 250, 40, 40))
-    inimigo2 = inimigos.base((125, 600, 40, 40))
-    inimigo3 = inimigos.base((650, 250, 40, 40))
-    inimigo4 = inimigos.base((500, 500, 40, 40))
+    inimigo1 = inimigos.retangulos_inimigos((350,250))
+    inimigo2 = inimigos.retangulos_inimigos((125, 600))
+    inimigo3 = inimigos.retangulos_inimigos((650, 250))
+    inimigo4 = inimigos.retangulos_inimigos((500, 500))
+
+    #     def base(posicao):
+    #         return pygame.draw.rect(tela, (255, 0, 0), posicao)
+        
+    # inimigo1 = inimigos.base((350, 250, 40, 40))
+    # inimigo2 = inimigos.base((125, 600, 40, 40))
+    # inimigo3 = inimigos.base((650, 250, 40, 40))
+    # inimigo4 = inimigos.base((500, 500, 40, 40))
 
     if protagonista.colliderect(inimigo1):
         print('colidiu')

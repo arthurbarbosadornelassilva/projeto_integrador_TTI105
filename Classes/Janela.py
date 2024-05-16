@@ -5,7 +5,8 @@ class Janela():
         self.__tamanhoJanela = (960, 680)
     
     #Métodos
-    def criarTela
+    def criarTela():
+        pass
     def adicionarBotao(self, x = int, y = int, largura = int, altura = int):
         Rect(x, y, largura, altura)
     
