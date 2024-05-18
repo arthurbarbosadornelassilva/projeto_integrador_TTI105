@@ -1,9 +1,7 @@
 from ConnectionFactory import ConnectionFactory
 
 class DAO():
-    def __init__(self):
-        self.__idPergunta = int
-
+    #Métodos de pergunta e resposta
     def pegarPergunta(self):
         #Estou usando esse site https://dev.mysql.com/doc/connector-python/en/connector-python-examples.html
         connection = ConnectionFactory()
@@ -17,15 +15,15 @@ class DAO():
 
         for item in cursor:
             pergunta = item[0]
-            self.__idPergunta = item[1]
+            idPergunta = item[1]
         
         cursor.close()
         conexao.close()
 
         print(pergunta)
-        return pergunta
+        return pergunta, idPergunta
     
-    def registrarErro(self):
+    def registrarErro(self, idPergunta):
         connection = ConnectionFactory()
         conexao = connection.obterConexao()
         cursor = conexao.cursor()
@@ -33,20 +31,20 @@ class DAO():
         
         query = ("UPDATE perguntas "
                  "SET qtdErros = qtdErros + 1 "
-                 f"WHERE idPergunta = {self.__idPergunta};")
+                 f"WHERE idPergunta = {idPergunta};")
         cursor.execute(query)
         conexao.commit()
         
         cursor.close()
         conexao.close()
 
-    def pegarRespostas(self):
+    def pegarRespostas(self, idPergunta):
         connection = ConnectionFactory()
         conexao = connection.obterConexao()
         cursor = conexao.cursor()
 
         query = ("SELECT resposta, respostaCorreta FROM respostas "
-                 f"WHERE idPergunta = {self.__idPergunta} "
+                 f"WHERE idPergunta = {idPergunta} "
                  "ORDER BY RAND()")
         cursor.execute(query)
 
@@ -63,3 +61,58 @@ class DAO():
         conexao.close()
         
         return respostas, respostaCorreta
+    
+    #Métodos de aluno e professor
+    def registrarAluno(self, nome, email):
+        connection = ConnectionFactory()
+        conexao = connection.obterConexao()
+        cursor = conexao.cursor()
+
+        query = ("INSERT INTO aluno (nome, email) "
+                 f"VALUES ({nome}, {email})")
+        cursor.execute(query)
+        conexao.commit()
+
+        cursor.close()
+        conexao.close()
+
+    def existeAluno(self, nome, email):
+        connection = ConnectionFactory()
+        conexao = connection.obterConexao()
+        cursor = conexao.cursor()
+
+        query = ("SELECT EXISTS (SELECT nome, email FROM aluno "
+                 f"WHERE nome = {nome} AND email = {email}")
+        existe = cursor.execute(query)
+        
+        cursor.close()
+        conexao.close()
+
+        return existe
+    
+    def registrarProfessor(self, nome, email):
+        connection = ConnectionFactory()
+        conexao = connection.obterConexao()
+        cursor = conexao.cursor()
+
+        query = ("INSERT INTO professor (nome, email) "
+                 f"VALUES ({nome}, {email})")
+        cursor.execute(query)
+        conexao.commit()
+
+        cursor.close()
+        conexao.close()
+    
+    def existeProfessor(self, nome, email):
+        connection = ConnectionFactory()
+        conexao = connection.obterConexao()
+        cursor = conexao.cursor()
+
+        query = ("SELECT EXISTS (SELECT idProfessor, nome, email FROM professor "
+                 f"WHERE nome = {nome} AND email = {email}")
+        existe = cursor.execute(query)
+        
+        cursor.close()
+        conexao.close()
+
+        return existe
