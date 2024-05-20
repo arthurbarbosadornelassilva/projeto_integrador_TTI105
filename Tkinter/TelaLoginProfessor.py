@@ -1,15 +1,19 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import messagebox
+from Classes import DAO, Usuario
 
-# Function to validate the login
+dao = DAO.DAO()
+# Função para validar o login
 def validar_login():
     nome = nome_entry.get()
     email = email_entry.get()
 
-    # You can add your own validation logic here
-    if nome == "COLOCAR NOME(PROFESSOR)" and email == "email":
+    existe = dao.existeProfessor(nome, email)
+
+    if existe:
         messagebox.showinfo("Sucesso", "Seja bem vindo, ")
+        return nome, email
     else:
         messagebox.showerror("Falha no login", "Nome ou email inválidos")
 

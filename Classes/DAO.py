@@ -1,10 +1,10 @@
-from ConnectionFactory import ConnectionFactory
+from Classes import ConnectionFactory
 
 class DAO():
     #Métodos de pergunta e resposta
     def pegarPergunta(self):
         #Estou usando esse site https://dev.mysql.com/doc/connector-python/en/connector-python-examples.html
-        connection = ConnectionFactory()
+        connection = ConnectionFactory.ConnectionFactory()
         conexao = connection.obterConexao()
         cursor = conexao.cursor()
 
@@ -20,11 +20,10 @@ class DAO():
         cursor.close()
         conexao.close()
 
-        print(pergunta)
         return pergunta, idPergunta
     
     def registrarErro(self, idPergunta):
-        connection = ConnectionFactory()
+        connection = ConnectionFactory.ConnectionFactory()
         conexao = connection.obterConexao()
         cursor = conexao.cursor()
 
@@ -39,7 +38,7 @@ class DAO():
         conexao.close()
 
     def pegarRespostas(self, idPergunta):
-        connection = ConnectionFactory()
+        connection = ConnectionFactory.ConnectionFactory()
         conexao = connection.obterConexao()
         cursor = conexao.cursor()
 
@@ -64,12 +63,12 @@ class DAO():
     
     #Métodos de aluno e professor
     def registrarAluno(self, nome, email):
-        connection = ConnectionFactory()
+        connection = ConnectionFactory.ConnectionFactory()
         conexao = connection.obterConexao()
         cursor = conexao.cursor()
 
         query = ("INSERT INTO aluno (nome, email) "
-                 f"VALUES ({nome}, {email})")
+                 f"VALUES (\'{nome}\', \'{email})\')")
         cursor.execute(query)
         conexao.commit()
 
@@ -77,12 +76,12 @@ class DAO():
         conexao.close()
 
     def existeAluno(self, nome, email):
-        connection = ConnectionFactory()
+        connection = ConnectionFactory.ConnectionFactory()
         conexao = connection.obterConexao()
         cursor = conexao.cursor()
 
         query = ("SELECT EXISTS (SELECT nome, email FROM aluno "
-                 f"WHERE nome = {nome} AND email = {email}")
+                 f"WHERE nome = \'{nome}\' AND email = \'{email})\'")
         existe = cursor.execute(query)
         
         cursor.close()
@@ -91,12 +90,12 @@ class DAO():
         return existe
     
     def registrarProfessor(self, nome, email):
-        connection = ConnectionFactory()
+        connection = ConnectionFactory.ConnectionFactory()
         conexao = connection.obterConexao()
         cursor = conexao.cursor()
 
         query = ("INSERT INTO professor (nome, email) "
-                 f"VALUES ({nome}, {email})")
+                 f"VALUES (\'{nome}\', \'{email})\')")
         cursor.execute(query)
         conexao.commit()
 
@@ -104,13 +103,16 @@ class DAO():
         conexao.close()
     
     def existeProfessor(self, nome, email):
-        connection = ConnectionFactory()
+        connection = ConnectionFactory.ConnectionFactory()
         conexao = connection.obterConexao()
         cursor = conexao.cursor()
 
-        query = ("SELECT EXISTS (SELECT idProfessor, nome, email FROM professor "
-                 f"WHERE nome = {nome} AND email = {email}")
-        existe = cursor.execute(query)
+        query = ("SELECT EXISTS (SELECT nome, email FROM professor "
+                 f"WHERE nome = \'{nome}\' AND email = \'{email})\')")
+        cursor.execute(query)
+
+        for item in cursor:
+            existe = item
         
         cursor.close()
         conexao.close()
