@@ -10,12 +10,9 @@ class Janela():
     def adicionarBotao(self, x = int, y = int, largura = int, altura = int):
         Rect(x, y, largura, altura)
     
-    def adicionarTexto(self, texto = str, x = int, y = int, largura = int, altura = int, fonte = str, tamanhoFonte = int, corTexto = tuple, corFundo = tuple):
+    def adicionarTexto(self, janela, texto = str, x = int, y = int, largura = int, altura = int, fonte = str, tamanhoFonte = int, corTexto = tuple, corFundo = tuple):
         text = font.SysFont(fonte, tamanhoFonte, True, False).render(texto, True, corTexto, corFundo)
-        Surface.blit(text)
+        Surface.blit(text, janela, (x, y))
 
     def adicionarSprite(self, protagonista, inimigo):
-        pass
-    
-    def adicionarCampoDeEntrada(self):
         pass

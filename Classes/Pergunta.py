@@ -21,7 +21,7 @@ class Pergunta():
 
         draw.rect(tela, corFundo, (self.__coordenadas[0], self.__coordenadas[1], largura, altura))
         pergunta = font.SysFont(self.__fonte, self.__tamanhoFonte, True, False).render(self.__pergunta, True, (0, 0, 0))
-        Surface.blit(pergunta, (self.__coordenadas[0] + 50, self.__coordenadas[1] + 30))
+        Surface.blit(tela, pergunta, (self.__coordenadas[0] + 50, self.__coordenadas[1] + 30))
     
     def alterarPergunta(self, funcao, pergunta):
         match funcao:
