@@ -1,31 +1,48 @@
-from DAO import DAO
+from Classes import DAO
 from pygame import font, Surface
 
 class Resposta():
     #Atributos
-    def __init__(self, fonte = str, tamanhoFonte = int, coordenadas = tuple):
+    def __init__(self, fonte = str, tamanhoFonte = int, X = int):
         self.__fonte = fonte
         self.__tamanhoFonte = tamanhoFonte
-        self.__coordenadas = coordenadas
+        self.__coordenadaX = X
         self.__respostas = tuple
         self.__respostaCorreta = int
+        self.__listaRespostaCorreta = list
         self.caixaDeColisao = tuple
         self.__dificuldade = ""
     
     #Métodos
-    def exibirRespostas(self, tela):
-        dao = DAO()
+    def definirRespostas(self, idPergunta):
+        dao = DAO.DAO()
+        self.__respostas, self.__listaRespostaCorreta = dao.pegarRespostas(idPergunta)
 
+
+    def exibirRespostas(self, tela, altura):
+        altura += 50
         adicionalY = 0
         letras = ("A) ", "B) ", "C) ", "D) ", "E) ")
-        self.__respostas, listaRespostaCorreta = dao.pegarRespostas
+        fonte = font.Font(self.__fonte, self.__tamanhoFonte)
+        
+        espaco = fonte.size(' ')[0]
+        larguraMax, alturaMax = (860, 450)
+        x, y = (self.__coordenadaX, altura)
         
         for i in self.__respostas:
-            resposta = font.SysFont(self.__fonte, self.__tamanhoFonte, True, False).render(f"{letras[self.__respostas.index(i)]}" + self.__respostas[i], True, (0, 0, 0))
-            Surface.blit(resposta, (self.__coordenadas[0], self.__coordenadas[1] + adicionalY))
-            adicionalY += 50
+            texto = (letras[self.__respostas.index(i)] + self.__respostas[self.__respostas.index(i)]).split()
+            for palavra in texto:
+                resposta = fonte.render(palavra, True, (0, 0, 0))
 
-            if listaRespostaCorreta[self.__respostas.index(i)]:
+                if x + resposta.get_width() > larguraMax:
+                    x = self.__coordenadaX
+                    y += resposta.get_height()
+                Surface.blit(tela, resposta, (x, y + adicionalY))
+                x += resposta.get_width() + espaco
+            x = self.__coordenadaX
+            adicionalY += resposta.get_height() + 50
+
+            if self.__listaRespostaCorreta[self.__respostas.index(i)]:
                 self.__respostaCorreta = self.__respostas.index(i)
     
     def registrarEscolha(self, escolha):
@@ -44,4 +61,4 @@ class Resposta():
     
     def exibrErro(self, escolha):
         letras = ("A) ", "B) ", "C) ", "D) ", "E) ")
-        resposta = font.SysFont(self.__fonte, self.__tamanhoFonte, True, False).render(f"{letras[escolha]}" + self.__respostas[escolha], True, (255, 0, 0))
+        resposta = font.Font(self.__fonte, self.__tamanhoFonte, True, False).render(f"{letras[escolha]}" + self.__respostas[escolha], True, (255, 0, 0))

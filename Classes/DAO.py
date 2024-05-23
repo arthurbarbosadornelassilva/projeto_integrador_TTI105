@@ -19,7 +19,7 @@ class DAO():
         
         cursor.close()
         conexao.close()
-
+        
         return pergunta, idPergunta
     
     def registrarErro(self, idPergunta):
@@ -59,7 +59,7 @@ class DAO():
         cursor.close()
         conexao.close()
         
-        return respostas, respostaCorreta
+        return (respostas, respostaCorreta)
     
     #Métodos de aluno e professor
     def registrarAluno(self, nome, email):

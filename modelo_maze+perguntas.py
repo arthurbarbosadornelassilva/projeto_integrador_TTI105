@@ -1,4 +1,6 @@
-# ativando o pygame
+#importando as classes pacote Classes
+from Classes import Pergunta, Resposta, DAO
+#ativando o pygame
 import pygame
 from sys import exit
 
@@ -13,17 +15,24 @@ alturaTela = 680
 x = 30
 y = 30
 tela = pygame.display.set_mode((larguraTela, alturaTela))
+
 #variável da fonte
 fonte = pygame.font.SysFont("Arial", 20, True, False)
 plano_de_fundo = pygame.image.load('img\Fundo1.1.png')
+
 #definindo specs inimigo
 skin_inimigo = pygame.image.load('img\Virus01.png').convert_alpha()
 inimigo = skin_inimigo.get_rect()
+
 #clock do jogo
 relogio = pygame.time.Clock()
+
 #variáveis das perguntas
 mensagemAtiva = False
-perguntaFeita = False
+#definindo os objetos:
+pergunta = Pergunta.Pergunta('font/PixelifySans-Regular.ttf', 20, (100, 200))
+respostas = Resposta.Resposta('font/PixelifySans-Regular.ttf', 20, 100)
+
 
 rectP1 = pygame.draw.rect(tela, (100, 255, 100), (300, 500, 20, 20))
 rectP2 = pygame.draw.rect(tela, (100, 255, 100), (300, 550, 20, 20))
@@ -104,12 +113,6 @@ while True:
                 y -= 5
 
     #PERGUNTAS:
-    #definindo as perguntas:
-    pergunta = fonte.render("Isso é um exemplo de pergunta...", True, "Black")
-    resposta1 = fonte.render("A) Essa seria a resposta1...", True, "Black" )
-    resposta2 = fonte.render("B) Essa seria a resposta2...", True, "Black" )
-    resposta3 = fonte.render("C) Essa seria a resposta3...", True, "Black" )
-
     #definindo os inimigos:
     def retangulos_inimigos(posicao):
         skin_inimigo = pygame.image.load("img\Virus01.png")
@@ -129,112 +132,20 @@ while True:
     #definindo mouse
     mouse_x, mouse_y = pygame.mouse.get_pos()
     rectMouse = pygame.Rect(mouse_x - 5, mouse_y - 5, 10, 10)
-
+    
     # -----------
     for i in range(len(inimigo)):
-        if protagonista.colliderect(inimigo[i]) and not perguntaFeita:
-            mensagemAtiva = True
+        if protagonista.colliderect(inimigo[i]):
+            if not mensagemAtiva:
+                pergunta.definirPergunta()
+                idPergunta = pergunta.getIdPergunta()
+                respostas.definirRespostas(idPergunta)
+                mensagemAtiva = True
             if mensagemAtiva:
-                pygame.draw.rect(tela, (255, 255, 255), (250, 400, 600, 250)) #essa linha desenha o fundo do texto
-                tela.blit(pergunta, (300, 430)) #essa linha desenha o texto da pergunta
-                tela.blit(resposta1, (300, 500)) #essa linha desenha o texto da resposta 1
-                tela.blit(resposta2, (300, 550)) #essa linha desenha o texto da resposta 2
-                tela.blit(resposta3, (300, 600)) #essa linha desenha o texto da resposta 3
-                # rectP1 = pygame.draw.rect(tela, (100, 255, 100), (300, 500, 20, 20))
-                # rectP2 = pygame.draw.rect(tela, (100, 255, 100), (300, 550, 20, 20))
-                # rectP3 = pygame.draw.rect(tela, (100, 255, 100), (300, 600, 20, 20))
-
-                # tela.blit(resposta1, (300, 500)) #essa linha desenha o texto da resposta 1
-                # rectP1 = pygame.draw.rect(tela, (100, 255, 100), (300, 500, 20, 20)) #essa linha desenha a área de colisão da resposta 1
-                # if rectMouse.colliderect(rectP1) and pygame.mouse.get_pressed(3)[0]:
-                #     perguntaFeita = True
-                #     mensagemAtiva = False
-                    
-                # tela.blit(resposta2, (300, 550)) #essa linha desenha o texto da resposta 2
-                # rectP2 = pygame.draw.rect(tela, (100, 255, 100), (300, 550, 20, 20)) #essa linha desenha a área de colisão da resposta 2
-                # if rectMouse.colliderect(rectP2) and pygame.mouse.get_pressed(3)[0]:
-                #     perguntaFeita = True
-                #     mensagemAtiva = False
-
-                # tela.blit(resposta3, (300, 600)) #essa linha desenha o texto da resposta 3
-                # rectP3 = pygame.draw.rect(tela, (100, 255, 100), (300, 600, 20, 20)) #essa linha desenha a área de colisão da resposta 3
-                # if rectMouse.colliderect(rectP3) and pygame.mouse.get_pressed(3)[0]:
-                #     perguntaFeita = True
-                #     mensagemAtiva = False
-
-    # -----------
-    # if protagonista.colliderect(inimigo2) and not perguntaFeita:
-    #     mensagemAtiva = True
-    #     if  mensagemAtiva:
-    #         pygame.draw.rect(tela, (255, 255, 255), (250, 400, 800, 250)) #essa linha desenha o fundo do texto
-    #         tela.blit(pergunta, (300, 430)) #essa linha desenha o texto da pergunta
-
-    #         tela.blit(resposta1, (300, 500)) #essa linha desenha o texto da resposta 1
-    #         rectP1 = pygame.draw.rect(tela, (100, 255, 100), (300, 500, 20, 20)) #essa linha desenha a área de colisão da resposta 1
-    #         if rectMouse.colliderect(rectP1) and pygame.mouse.get_pressed(3)[0]:
-    #             perguntaFeita = True
-    #             mensagemAtiva = False
+                pergunta.exibirPergunta(tela, 860, 450, (255, 255, 255))
+                altura = pergunta.getAlturaTotalPergunta()
                 
-    #         tela.blit(resposta2, (300, 550)) #essa linha desenha o texto da resposta 2
-    #         rectP2 = pygame.draw.rect(tela, (100, 255, 100), (300, 550, 20, 20)) #essa linha desenha a área de colisão da resposta 2
-    #         if rectMouse.colliderect(rectP2) and pygame.mouse.get_pressed(3)[0]:
-    #             perguntaFeita = True
-    #             mensagemAtiva = False
-
-    #         tela.blit(resposta3, (300, 600)) #essa linha desenha o texto da resposta 3
-    #         rectP3 = pygame.draw.rect(tela, (100, 255, 100), (300, 600, 20, 20)) #essa linha desenha a área de colisão da resposta 3
-    #         if rectMouse.colliderect(rectP3) and pygame.mouse.get_pressed(3)[0]:
-    #             perguntaFeita = True
-    #             mensagemAtiva = False
-
-    # # -----------
-    # if protagonista.colliderect(inimigo3) and not perguntaFeita:
-    #     mensagemAtiva = True
-    #     if  mensagemAtiva:
-    #         pygame.draw.rect(tela, (255, 255, 255), (250, 400, 800, 250)) #essa linha desenha o fundo do texto
-    #         tela.blit(pergunta, (300, 430)) #essa linha desenha o texto da pergunta
-
-    #         tela.blit(resposta1, (300, 500)) #essa linha desenha o texto da resposta 1
-    #         rectP1 = pygame.draw.rect(tela, (100, 255, 100), (300, 500, 20, 20)) #essa linha desenha a área de colisão da resposta 1
-    #         if rectMouse.colliderect(rectP1) and pygame.mouse.get_pressed(3)[0]:
-    #             perguntaFeita = True
-    #             mensagemAtiva = False
-                
-    #         tela.blit(resposta2, (300, 550)) #essa linha desenha o texto da resposta 2
-    #         rectP2 = pygame.draw.rect(tela, (100, 255, 100), (300, 550, 20, 20)) #essa linha desenha a área de colisão da resposta 2
-    #         if rectMouse.colliderect(rectP2) and pygame.mouse.get_pressed(3)[0]:
-    #             perguntaFeita = True
-    #             mensagemAtiva = False
-
-    #         tela.blit(resposta3, (300, 600)) #essa linha desenha o texto da resposta 3
-    #         rectP3 = pygame.draw.rect(tela, (100, 255, 100), (300, 600, 20, 20)) #essa linha desenha a área de colisão da resposta 3
-    #         if rectMouse.colliderect(rectP3) and pygame.mouse.get_pressed(3)[0]:
-    #             perguntaFeita = True
-    #             mensagemAtiva = False
-
-    # # -----------
-    # if protagonista.colliderect(inimigo4) and not perguntaFeita:
-    #     mensagemAtiva = True
-    #     if  mensagemAtiva:
-    #         pygame.draw.rect(tela, (255, 255, 255), (250, 400, 800, 250)) #essa linha desenha o fundo do texto
-    #         tela.blit(pergunta, (300, 430)) #essa linha desenha o texto da pergunta
-
-    #         tela.blit(resposta1, (300, 500)) #essa linha desenha o texto da resposta 1
-    #         rectP1 = pygame.draw.rect(tela, (100, 255, 100), (300, 500, 20, 20)) #essa linha desenha a área de colisão da resposta 1
-    #         if rectMouse.colliderect(rectP1) and pygame.mouse.get_pressed(3)[0]:
-    #             perguntaFeita = True
-    #             mensagemAtiva = False
-                
-    #         tela.blit(resposta2, (300, 550)) #essa linha desenha o texto da resposta 2
-    #         rectP2 = pygame.draw.rect(tela, (100, 255, 100), (300, 550, 20, 20)) #essa linha desenha a área de colisão da resposta 2
-    #         if rectMouse.colliderect(rectP2) and pygame.mouse.get_pressed(3)[0]:
-    #             perguntaFeita = True
-    #             mensagemAtiva = False
-
-    #         tela.blit(resposta3, (300, 600)) #essa linha desenha o texto da resposta 3
-    #         rectP3 = pygame.draw.rect(tela, (100, 255, 100), (300, 600, 20, 20)) #essa linha desenha a área de colisão da resposta 3
-    #         if rectMouse.colliderect(rectP3) and pygame.mouse.get_pressed(3)[0]:
-    #             perguntaFeita = True
-    #             mensagemAtiva = False
-
+                respostas.exibirRespostas(tela, altura)
+            
+             
     pygame.display.update()
