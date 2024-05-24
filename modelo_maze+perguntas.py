@@ -1,5 +1,6 @@
-#importando as classes pacote Classes
+#importando pacote Classes e random
 from Classes import Pergunta, Resposta, DAO
+from random import choice
 #ativando o pygame
 import pygame
 from sys import exit
@@ -43,14 +44,9 @@ def retangulos_inimigos(posicao):
     inimigo.topleft = (posicao)
     return inimigo
 
-if not perguntaFeita:
-    inimigo1 = retangulos_inimigos((350,250))
-    inimigo2 = retangulos_inimigos((125, 600))
-    inimigo3 = retangulos_inimigos((650, 250))
-    inimigo4 = retangulos_inimigos((500, 500))
+posicoes_possiveis = ((350, 250), (125, 600), (650, 250), (500, 500))
+posicao_atual = []
 
-#lista inimigo
-inimigo = [inimigo1, inimigo2, inimigo3, inimigo4]
 
 #LOOP DO JOGO
 while True:
@@ -68,12 +64,11 @@ while True:
                 # mensagemAtiva = False
                 # perguntaFeita = False
                 escolha = 0
-                print(inimigo)
             elif rectP2.collidepoint(event.pos):
                 # mensagemAtiva = False
                 # perguntaFeita = False
                 escolha = 1
-                inimigo.pop(inimigo.index(inimigo_atual))
+                posicao_atual.pop(inimigo.index(inimigo_atual))
                 mensagemAtiva = False
             elif rectP3.collidepoint(event.pos):
                 mensagemAtiva = False
@@ -140,26 +135,31 @@ while True:
     #definindo mouse
     mouse_x, mouse_y = pygame.mouse.get_pos()
     rectMouse = pygame.Rect(mouse_x - 5, mouse_y - 5, 10, 10)
-    
+
+    #definindo posição do inimigo
+    if len(posicao_atual) == 0:
+        posicao_atual = choice(posicoes_possiveis)
+    i = retangulos_inimigos(posicao_atual)
+    print(posicao_atual)
     # -----------
-    for i in inimigo:
+    
+    if not mensagemAtiva:
+        tela.blit(skin_inimigo, i)
+    if protagonista.colliderect((i)):
+        inimigo_atual = i
+        
         if not mensagemAtiva:
-            tela.blit(skin_inimigo, i)
-        if protagonista.colliderect((i)):
-            inimigo_atual = i
-            
-            if not mensagemAtiva:
-                respostas.setListadeColisao([])
-                pergunta.definirPergunta()
-                idPergunta = pergunta.getIdPergunta()
-                respostas.definirRespostas(idPergunta)
-                mensagemAtiva = True
-            if mensagemAtiva:
-                pergunta.exibirPergunta(tela, 860, 500, (255, 255, 255))
-                altura = pergunta.getAlturaTotalPergunta()
-                respostas.exibirRespostas(tela, altura)
-                for rect in respostas.getListaDeColisao():
-                    pygame.draw.rect(tela, (0, 0, 255), pygame.Rect(rect))
-            
+            respostas.setListadeColisao([])
+            pergunta.definirPergunta()
+            idPergunta = pergunta.getIdPergunta()
+            respostas.definirRespostas(idPergunta)
+            mensagemAtiva = True
+        if mensagemAtiva:
+            pergunta.exibirPergunta(tela, 860, 500, (255, 255, 255))
+            altura = pergunta.getAlturaTotalPergunta()
+            respostas.exibirRespostas(tela, altura)
+            for rect in respostas.getListaDeColisao():
+                pygame.draw.rect(tela, (0, 0, 255), pygame.Rect(rect))
+        
              
     pygame.display.update()
