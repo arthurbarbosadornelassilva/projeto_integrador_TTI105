@@ -21,10 +21,11 @@ class Pergunta():
         fonte = font.Font(self.__fonte, self.__tamanhoFonte)
         texto = self.__pergunta.split()
         espaco = fonte.size(' ')[0]
-        larguraMax, alturaMax = (860, 450)
+        larguraMax, alturaMax = (largura, altura)
         x, y = (self.__coordenadas[0], self.__coordenadas[1])
-
-        draw.rect(tela, corFundo, (self.__coordenadas[0] - 50, self.__coordenadas[1] - 30, largura, altura))
+ 
+        draw.rect(tela, corFundo, (self.__coordenadas[0] - 50, self.__coordenadas[1] - 30, largura, altura)) #Desenha a caixa que recebe as perguntas e respostas
+        draw.rect(tela, 'Black', (self.__coordenadas[0] - 50, self.__coordenadas[1] - 30, largura, altura), 5) #Desenha a borda da caixa
         for palavra in texto:
             pergunta = fonte.render(palavra, True, (0, 0, 0))
             if x + pergunta.get_width() > larguraMax:

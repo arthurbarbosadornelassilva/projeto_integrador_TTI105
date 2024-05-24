@@ -1,5 +1,5 @@
 from Classes import DAO
-from pygame import font, Surface
+from pygame import font, Surface, Rect
 
 class Resposta():
     #Atributos
@@ -10,7 +10,7 @@ class Resposta():
         self.__respostas = tuple
         self.__respostaCorreta = int
         self.__listaRespostaCorreta = list
-        self.caixaDeColisao = tuple
+        self.__listaDeColisao = []
         self.__dificuldade = ""
     
     #Métodos
@@ -31,16 +31,19 @@ class Resposta():
         
         for i in self.__respostas:
             texto = (letras[self.__respostas.index(i)] + self.__respostas[self.__respostas.index(i)]).split()
+            
+            rectColisao = [self.__coordenadaX - 10, y + adicionalY, 25, 25]
             for palavra in texto:
                 resposta = fonte.render(palavra, True, (0, 0, 0))
-
                 if x + resposta.get_width() > larguraMax:
                     x = self.__coordenadaX
                     y += resposta.get_height()
                 Surface.blit(tela, resposta, (x, y + adicionalY))
                 x += resposta.get_width() + espaco
             x = self.__coordenadaX
-            adicionalY += resposta.get_height() + 50
+            adicionalY += resposta.get_height() + 25
+            if len(self.__listaDeColisao) < 3:
+                self.__listaDeColisao.append(rectColisao)
 
             if self.__listaRespostaCorreta[self.__respostas.index(i)]:
                 self.__respostaCorreta = self.__respostas.index(i)
@@ -62,3 +65,10 @@ class Resposta():
     def exibrErro(self, escolha):
         letras = ("A) ", "B) ", "C) ", "D) ", "E) ")
         resposta = font.Font(self.__fonte, self.__tamanhoFonte, True, False).render(f"{letras[escolha]}" + self.__respostas[escolha], True, (255, 0, 0))
+
+    #Getters e Setters
+    def getListaDeColisao(self):
+        return self.__listaDeColisao
+    
+    def setListadeColisao(self, listaDeColisao):
+        self.__listaDeColisao = listaDeColisao

@@ -6,7 +6,7 @@ class ConnectionFactory():
         self.__porta = "15646"
         self.__db = "VacMan"
         self.__usuario = "avnadmin"
-        self.__senha = ""
+        self.__senha = "AVNS_rCjVzSwQNNappG-DVTY"
     
     def obterConexao(self):
         conexao = mysql.connector.connect(user = self.__usuario, password = self.__senha, host = self.__host, database = self.__db, port = self.__porta)

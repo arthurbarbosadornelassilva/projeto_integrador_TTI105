@@ -18,10 +18,10 @@ tela = pygame.display.set_mode((larguraTela, alturaTela))
 
 #variável da fonte
 fonte = pygame.font.SysFont("Arial", 20, True, False)
-plano_de_fundo = pygame.image.load('img\Fundo1.1.png')
+plano_de_fundo = pygame.image.load('img/Fundo1.1.png')
 
 #definindo specs inimigo
-skin_inimigo = pygame.image.load('img\Virus01.png').convert_alpha()
+skin_inimigo = pygame.image.load('img/Virus01.png').convert_alpha()
 inimigo = skin_inimigo.get_rect()
 
 #clock do jogo
@@ -29,14 +29,28 @@ relogio = pygame.time.Clock()
 
 #variáveis das perguntas
 mensagemAtiva = False
+perguntaFeita = False
+
 #definindo os objetos:
-pergunta = Pergunta.Pergunta('font/PixelifySans-Regular.ttf', 20, (100, 200))
+pergunta = Pergunta.Pergunta('font/PixelifySans-SemiBold.ttf', 20, (100, 100))
 respostas = Resposta.Resposta('font/PixelifySans-Regular.ttf', 20, 100)
 
+#definindo os inimigos:
+inimigo_atual = None
 
-rectP1 = pygame.draw.rect(tela, (100, 255, 100), (300, 500, 20, 20))
-rectP2 = pygame.draw.rect(tela, (100, 255, 100), (300, 550, 20, 20))
-rectP3 = pygame.draw.rect(tela, (100, 255, 100), (300, 600, 20, 20))
+def retangulos_inimigos(posicao):
+    inimigo = skin_inimigo.get_rect()
+    inimigo.topleft = (posicao)
+    return inimigo
+
+if not perguntaFeita:
+    inimigo1 = retangulos_inimigos((350,250))
+    inimigo2 = retangulos_inimigos((125, 600))
+    inimigo3 = retangulos_inimigos((650, 250))
+    inimigo4 = retangulos_inimigos((500, 500))
+
+#lista inimigo
+inimigo = [inimigo1, inimigo2, inimigo3, inimigo4]
 
 #LOOP DO JOGO
 while True:
@@ -46,15 +60,25 @@ while True:
             pygame.quit()
             exit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
+            rectP1 = pygame.Rect(respostas.getListaDeColisao()[0])
+            rectP2 = pygame.Rect(respostas.getListaDeColisao()[1])
+            rectP3 = pygame.Rect(respostas.getListaDeColisao()[2])
+        
             if rectP1.collidepoint(event.pos):
-                perguntaFeita = True
-                mensagemAtiva = False
+                # mensagemAtiva = False
+                # perguntaFeita = False
+                escolha = 0
+                print(inimigo)
             elif rectP2.collidepoint(event.pos):
-                perguntaFeita = True
+                # mensagemAtiva = False
+                # perguntaFeita = False
+                escolha = 1
+                inimigo.pop(inimigo.index(inimigo_atual))
                 mensagemAtiva = False
             elif rectP3.collidepoint(event.pos):
-                perguntaFeita = True
                 mensagemAtiva = False
+                perguntaFeita = False
+                escolha = 2
 
 
     #MOVIMENTAÇÃO
@@ -113,39 +137,29 @@ while True:
                 y -= 5
 
     #PERGUNTAS:
-    #definindo os inimigos:
-    def retangulos_inimigos(posicao):
-        skin_inimigo = pygame.image.load("img\Virus01.png")
-        inimigo = skin_inimigo.get_rect()
-        inimigo.topleft = (posicao)
-        tela.blit(skin_inimigo, inimigo)
-        return inimigo
-        
-    inimigo1 = retangulos_inimigos((350,250))
-    inimigo2 = retangulos_inimigos((125, 600))
-    inimigo3 = retangulos_inimigos((650, 250))
-    inimigo4 = retangulos_inimigos((500, 500))
-
-    #lista inimigo
-    inimigo = [inimigo1, inimigo2, inimigo3, inimigo4]
-
     #definindo mouse
     mouse_x, mouse_y = pygame.mouse.get_pos()
     rectMouse = pygame.Rect(mouse_x - 5, mouse_y - 5, 10, 10)
     
     # -----------
-    for i in range(len(inimigo)):
-        if protagonista.colliderect(inimigo[i]):
+    for i in inimigo:
+        if not mensagemAtiva:
+            tela.blit(skin_inimigo, i)
+        if protagonista.colliderect((i)):
+            inimigo_atual = i
+            
             if not mensagemAtiva:
+                respostas.setListadeColisao([])
                 pergunta.definirPergunta()
                 idPergunta = pergunta.getIdPergunta()
                 respostas.definirRespostas(idPergunta)
                 mensagemAtiva = True
             if mensagemAtiva:
-                pergunta.exibirPergunta(tela, 860, 450, (255, 255, 255))
+                pergunta.exibirPergunta(tela, 860, 500, (255, 255, 255))
                 altura = pergunta.getAlturaTotalPergunta()
-                
                 respostas.exibirRespostas(tela, altura)
+                for rect in respostas.getListaDeColisao():
+                    pygame.draw.rect(tela, (0, 0, 255), pygame.Rect(rect))
             
              
     pygame.display.update()
