@@ -65,6 +65,16 @@ class Resposta():
     def exibrErro(self, escolha):
         letras = ("A) ", "B) ", "C) ", "D) ", "E) ")
         resposta = font.Font(self.__fonte, self.__tamanhoFonte, True, False).render(f"{letras[escolha]}" + self.__respostas[escolha], True, (255, 0, 0))
+    
+    def alterarRespostas(self, funcao, idPergunta, listaRespostaCorreta, novasRespostas=None):
+        dao = DAO.DAO()
+        match funcao:
+            case "adicionar":
+                dao.adicionarRespostas(idPergunta, listaRespostaCorreta, novasRespostas)
+            case "modificar":
+                dao.modificarRespostas(idPergunta, listaRespostaCorreta, novasRespostas)
+            case "remover":
+                dao.removerRespostas(idPergunta)
 
     #Getters e Setters
     def getListaDeColisao(self):

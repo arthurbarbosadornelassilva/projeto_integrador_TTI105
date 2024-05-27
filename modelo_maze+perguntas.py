@@ -44,8 +44,9 @@ def retangulos_inimigos(posicao):
     inimigo.topleft = (posicao)
     return inimigo
 
-posicoes_possiveis = ((350, 250), (125, 600), (650, 250), (500, 500))
+posicoes_possiveis = [(350, 250), (125, 600), (650, 250), (500, 500)]
 posicao_atual = []
+ultima_posicao = None
 
 
 #LOOP DO JOGO
@@ -68,7 +69,7 @@ while True:
                 # mensagemAtiva = False
                 # perguntaFeita = False
                 escolha = 1
-                posicao_atual.pop(inimigo.index(inimigo_atual))
+                posicao_atual.pop(0)
                 mensagemAtiva = False
             elif rectP3.collidepoint(event.pos):
                 mensagemAtiva = False
@@ -138,9 +139,19 @@ while True:
 
     #definindo posição do inimigo
     if len(posicao_atual) == 0:
-        posicao_atual = choice(posicoes_possiveis)
-    i = retangulos_inimigos(posicao_atual)
-    print(posicao_atual)
+        while True:
+            posicao_escolhida = choice(posicoes_possiveis)
+            if type(ultima_posicao) != tuple:
+                posicao_atual.append(posicao_escolhida)
+                ultima_posicao = posicao_escolhida
+                break
+            else:
+                if ultima_posicao != posicao_escolhida:
+                    posicao_atual.append(posicao_escolhida)
+                    ultima_posicao = posicao_escolhida
+                    break 
+    i = retangulos_inimigos(posicao_atual[0])
+    
     # -----------
     
     if not mensagemAtiva:

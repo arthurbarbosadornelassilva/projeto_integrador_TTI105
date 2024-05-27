@@ -37,6 +37,73 @@ class DAO():
         cursor.close()
         conexao.close()
 
+    def adicionarPergunta(self, novaPergunta, novaDificuldade):
+        connection = ConnectionFactory.ConnectionFactory()
+        conexao = connection.obterConexao()
+        cursor = conexao.cursor()
+
+        query = ("INSERT INTO perguntas(pergunta, dificuldade) "
+                 f"VALUES ({novaPergunta}, {novaDificuldade}) ")
+        cursor.execute(query)
+        conexao.commit()
+
+        query = ("SELECT idPergunta FROM perguntas "
+                 f"WHERE pergunta = {novaPergunta}")
+        cursor.execute(query)
+
+        for item in cursor:
+            idPergunta = item
+
+        cursor.close()
+        conexao.close()
+
+        return idPergunta
+    
+    def removerPergunta(self, pergunta):
+        connection = ConnectionFactory.ConnectionFactory()
+        conexao = connection.obterConexao()
+        cursor = conexao.cursor()
+
+        query = ("DELETE FROM perguntas "
+                 f"WHERE pergunta = {pergunta}")
+        cursor.execute(query)
+        conexao.commit()
+
+        query = ("SELECT idPergunta FROM perguntas "
+                 f"WHERE pergunta = {pergunta}")
+        cursor.execute(query)
+
+        for item in cursor:
+            idPergunta = item
+
+        cursor.close()
+        conexao.close()
+
+        return idPergunta
+    
+    def modificarPergunta(self, pergunta, novaPergunta=None, novaDificuldade=None):
+        connection = ConnectionFactory.ConnectionFactory()
+        conexao = connection.obterConexao()
+        cursor = conexao.cursor()
+
+        if novaPergunta != None and novaDificuldade != None:
+            query = ("UPDATE perguntas "
+                    f"SET pergunta = {novaPergunta}, dificuldade = {novaDificuldade} "
+                    f"WHERE pergunta = {pergunta};")
+        elif novaPergunta != None:
+            query = ("UPDATE perguntas "
+                    f"SET pergunta = {novaPergunta} "
+                    f"WHERE pergunta = {pergunta};")
+        elif novaDificuldade != None:
+            query = ("UPDATE perguntas "
+                    f"SET dificuldade = {novaDificuldade} "
+                    f"WHERE pergunta = {pergunta};")
+        cursor.execute(query)
+        conexao.commit()
+
+        cursor.close()
+        conexao.close()
+
     def pegarRespostas(self, idPergunta):
         connection = ConnectionFactory.ConnectionFactory()
         conexao = connection.obterConexao()
@@ -60,6 +127,66 @@ class DAO():
         conexao.close()
         
         return (respostas, respostaCorreta)
+    
+    def adicionarRespostas(self, idPergunta, listaRespostaCorreta:tuple, novasRespostas:tuple):
+        connection = ConnectionFactory.ConnectionFactory()
+        conexao = connection.obterConexao()
+        cursor = conexao.cursor()
+
+        for resposta in novasRespostas:
+            respostaCorreta = listaRespostaCorreta[novasRespostas.index(resposta)]
+            query = ("INSERT INTO respostas(resposta, respostaCorreta, idPergunta) "
+                    f"VALUES ({resposta}, {respostaCorreta}, {idPergunta}) ")
+            cursor.execute(query)
+            conexao.commit()
+
+        cursor.close()
+        conexao.close()
+    
+    def removerRespostas(self, idPergunta):
+        connection = ConnectionFactory.ConnectionFactory()
+        conexao = connection.obterConexao()
+        cursor = conexao.cursor()
+
+        query = ("DELETE FROM respostas "
+                 f"WHERE idPergunta = {idPergunta}")
+        cursor.execute(query)
+        conexao.commit()
+
+        cursor.close()
+        conexao.close()
+    
+    def modificarRespostas(self, idPergunta, novaListaRespostaCorreta:tuple, novaRespostas=None):
+        connection = ConnectionFactory.ConnectionFactory()
+        conexao = connection.obterConexao()
+        cursor = conexao.cursor()
+        respostas = []
+
+        if novaRespostas != None:
+            query = ("SELECT resposta FROM respostas "
+                     f"WHERE idPergunta = {idPergunta}")
+            cursor.execute(query)
+
+            for item in cursor:
+                respostas.append(item)
+
+            for resposta in novaRespostas:
+                antigaResposta = respostas[novaRespostas.index(resposta)]
+                respostaCorreta = novaListaRespostaCorreta[novaRespostas.index(resposta)]
+                if type(resposta) == str:
+                    query = ("UPDATE respostas "
+                            f"SET resposta = {novaRespostas}, respostaCorreta = {respostaCorreta} "
+                            f"WHERE resposta = {antigaResposta};")
+                else:
+                    query = ("UPDATE respostas "
+                            f"SET respostaCorreta = {respostaCorreta} "
+                            f"WHERE resposta = {antigaResposta};")
+
+                cursor.execute(query)
+                conexao.commit()
+
+        cursor.close()
+        conexao.close()
     
     #Métodos de aluno e professor
     def registrarAluno(self, nome, email):

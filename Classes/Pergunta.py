@@ -36,14 +36,15 @@ class Pergunta():
         
         self.__alturaTotalPergunta = y
 
-    def alterarPergunta(self, funcao, pergunta):
+    def alterarPergunta(self, funcao, pergunta, novaPergunta=None, novaDificuldade=None):
+        dao = DAO.DAO()
         match funcao:
             case "adicionar":
-                pass
+                dao.adicionarPergunta(novaPergunta, novaDificuldade)
             case "modificar":
-                pass
+                dao.modificarPergunta(pergunta, novaPergunta, novaDificuldade)
             case "remover":
-                pass
+                dao.removerPergunta(pergunta)
 
     #Getters
     def getIdPergunta(self):
