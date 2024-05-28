@@ -2,13 +2,14 @@ from Classes import ConnectionFactory
 
 class DAO():
     #Métodos de pergunta e resposta
-    def pegarPergunta(self):
+    def pegarPergunta(self, dificuldade):
         #Estou usando esse site https://dev.mysql.com/doc/connector-python/en/connector-python-examples.html
         connection = ConnectionFactory.ConnectionFactory()
         conexao = connection.obterConexao()
         cursor = conexao.cursor()
 
         query = ("SELECT pergunta, idPergunta FROM perguntas "
+                 f"WHERE dificuldade = {dificuldade} "
                  "ORDER BY RAND() "
                  "LIMIT 1;")
         cursor.execute(query)
@@ -17,20 +18,55 @@ class DAO():
             pergunta = item[0]
             idPergunta = item[1]
         
+        query = ("SELECT COUNT(pergunta) "
+                 "FROM perguntas "
+                 f"WHERE dificuldade = {dificuldade}")
+        cursor.execute(query)
+
+        for item in cursor:
+            quantidadePerguntas = item
+
         cursor.close()
         conexao.close()
         
-        return pergunta, idPergunta
+        return pergunta, idPergunta, quantidadePerguntas
+    
+    def pegarMultiplasPerguntas(self):
+        connection = ConnectionFactory.ConnectionFactory()
+        conexao = connection.obterConexao()
+        cursor = conexao.cursor()
+        perguntas = [] 
+
+        query = ("SELECT * FROM perguntas")
+        cursor.execute(query)
+
+        for item in cursor:
+            perguntas += item
+
+        return perguntas
     
     def registrarErro(self, idPergunta):
         connection = ConnectionFactory.ConnectionFactory()
         conexao = connection.obterConexao()
         cursor = conexao.cursor()
 
-        
         query = ("UPDATE perguntas "
                  "SET qtdErros = qtdErros + 1 "
                  f"WHERE idPergunta = {idPergunta};")
+        cursor.execute(query)
+        conexao.commit()
+        
+        cursor.close()
+        conexao.close()
+
+    def registrarAcerto(self, nome, email):
+        connection = ConnectionFactory.ConnectionFactory()
+        conexao = connection.obterConexao()
+        cursor = conexao.cursor()
+
+        query = ("UPDATE aluno "
+                 "SET acertos = acertos + 1 "
+                 f"WHERE nome = \'{nome}\' AND email = \'{email}\';")
         cursor.execute(query)
         conexao.commit()
         

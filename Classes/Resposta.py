@@ -11,7 +11,6 @@ class Resposta():
         self.__respostaCorreta = int
         self.__listaRespostaCorreta = list
         self.__listaDeColisao = []
-        self.__dificuldade = ""
     
     #Métodos
     def definirRespostas(self, idPergunta):
@@ -48,23 +47,33 @@ class Resposta():
             if self.__listaRespostaCorreta[self.__respostas.index(i)]:
                 self.__respostaCorreta = self.__respostas.index(i)
     
-    def registrarEscolha(self, escolha):
-        dao = DAO()
+    def registrarEscolha(self, tela, escolha, idPergunta, nomeJogador, emailJogador):
+        dao = DAO.DAO()
         if escolha == self.__respostaCorreta:
-            #contagemAcertos += 1 -> atributo da classe jogo
-            return True
+            dao.registrarAcerto(nomeJogador, emailJogador)
+            print("Acerto")
         else:
             #vida -= 1 -> atributo da classe jogo
-            self.exibrErro(escolha)
-            dao.registrarErro()
-
-    def alterarRespostas(self, respostas = tuple):
-        #Ressolver este aqui com o banco de dados
-        pass
+            dao.registrarErro(idPergunta)
+            print("Erro")
     
-    def exibrErro(self, escolha):
+    def exibrErro(self, escolha, tela):
         letras = ("A) ", "B) ", "C) ", "D) ", "E) ")
-        resposta = font.Font(self.__fonte, self.__tamanhoFonte, True, False).render(f"{letras[escolha]}" + self.__respostas[escolha], True, (255, 0, 0))
+        fonte = font.Font(self.__fonte, self.__tamanhoFonte)
+        rect = self.__listaDeColisao[escolha]
+
+        espaco = fonte.size(' ')[0]
+        larguraMax, alturaMax = (860, 450)
+        x, y = (self.__coordenadaX, rect[1])
+
+        texto = (letras[escolha] + self.__respostas[escolha]).split()
+        for palavra in texto:
+            resposta = fonte.render(palavra, True, (255, 0, 0))
+            if x + resposta.get_width() > larguraMax:
+                x = self.__coordenadaX
+                y += resposta.get_height()
+            Surface.blit(tela, resposta, (x, y))
+            x += resposta.get_width() + espaco
     
     def alterarRespostas(self, funcao, idPergunta, listaRespostaCorreta, novasRespostas=None):
         dao = DAO.DAO()
@@ -77,6 +86,8 @@ class Resposta():
                 dao.removerRespostas(idPergunta)
 
     #Getters e Setters
+    def getRespostaCorreta(self):
+        return self.__respostaCorreta
     def getListaDeColisao(self):
         return self.__listaDeColisao
     

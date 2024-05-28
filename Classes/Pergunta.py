@@ -9,13 +9,17 @@ class Pergunta():
         self.__coordenadas = coordenadas
         self.__pergunta = str
         self.__idPergunta = str
-        self.__mensagemAtiva = bool
+        self.__dificuldade = 0
+        self.__quantidadePerguntas = 0
         self.__alturaTotalPergunta = 0
 
     #Métodos
-    def definirPergunta(self):
+    def definirPergunta(self, questoesRepetidas):
         dao = DAO.DAO()
-        self.__pergunta, self.__idPergunta = dao.pegarPergunta()
+        while True:
+            self.__pergunta, self.__idPergunta, self.__quantidadePerguntas = dao.pegarPergunta(self.__dificuldade)
+            if self.__idPergunta not in questoesRepetidas:
+                break
 
     def exibirPergunta(self, tela, largura = int, altura = int, corFundo = tuple):
         fonte = font.Font(self.__fonte, self.__tamanhoFonte)
@@ -52,3 +56,10 @@ class Pergunta():
     
     def getAlturaTotalPergunta(self):
         return self.__alturaTotalPergunta
+    
+    def getQuantidadePerguntas(self):
+        return self.__quantidadePerguntas
+    
+    #Setters
+    def setDificuldade(self, dificuldade):
+        self.__dificuldade = dificuldade
