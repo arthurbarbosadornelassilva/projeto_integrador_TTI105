@@ -21,14 +21,14 @@ class Usuario():
         self.__emailProfessor = emailProfessor
 
     #Getters
-    def getNomeAluno(self, nomeAluno):
+    def getNomeAluno(self):
         return self.__nomeAluno
     
-    def getEmailAluno(self, emailAluno):
+    def getEmailAluno(self):
         return self.__emailAluno
     
-    def getNomeProfessor(self, nomeProfessor):
+    def getNomeProfessor(self):
         return self.__nomeProfessor
     
-    def getEmailProfessor(self, emailProfessor):
+    def getEmailProfessor(self):
         return self.__emailProfessor

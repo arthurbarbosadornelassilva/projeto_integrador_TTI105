@@ -1,5 +1,5 @@
 #importando pacote Classes e random
-from Classes import Pergunta, Resposta, DAO
+from Classes import Pergunta, Resposta, Usuario
 from random import choice
 #ativando o pygame
 import pygame
@@ -30,11 +30,15 @@ relogio = pygame.time.Clock()
 
 #variáveis das perguntas
 mensagemAtiva = False
-perguntaFeita = False
+dificuldade = 3 #as dificuldades são as seguintes: 1: fácil | 2: médio | 3: difícil | 4: final/chefão
+escolhaFeita = False
+idQuestoesRepetidas = [1, 1, 1, 1, 1, 1, 1]
 
 #definindo os objetos:
 pergunta = Pergunta.Pergunta('font/PixelifySans-SemiBold.ttf', 20, (100, 100))
+pergunta.setDificuldade(dificuldade)
 respostas = Resposta.Resposta('font/PixelifySans-Regular.ttf', 20, 100)
+
 
 #definindo os inimigos:
 inimigo_atual = None
@@ -47,6 +51,7 @@ def retangulos_inimigos(posicao):
 posicoes_possiveis = [(350, 250), (125, 600), (650, 250), (500, 500)]
 posicao_atual = []
 ultima_posicao = None
+
 
 #LOOP DO JOGO
 while True:
@@ -61,19 +66,29 @@ while True:
             rectP3 = pygame.Rect(respostas.getListaDeColisao()[2])
         
             if rectP1.collidepoint(event.pos):
-                # mensagemAtiva = False
-                # perguntaFeita = False
-                escolha = 0
+                if not escolhaFeita:
+                    mensagemAtiva = False
+                    escolha = 0
+                    respostas.registrarEscolha(tela, escolha, idPergunta, nome, email)
+                    posicao_atual.pop(0)
+                    idQuestoesRepetidas.append(idPergunta)
+                    escolhaFeita = True
             elif rectP2.collidepoint(event.pos):
-                # mensagemAtiva = False
-                # perguntaFeita = False
-                escolha = 1
-                posicao_atual.pop(0)
-                mensagemAtiva = False
+                if not escolhaFeita:
+                    mensagemAtiva = False
+                    escolha = 1
+                    respostas.registrarEscolha(tela, escolha, idPergunta, nome, email)
+                    idQuestoesRepetidas.append(idPergunta)
+                    posicao_atual.pop(0)
+                    escolhaFeita = True
             elif rectP3.collidepoint(event.pos):
-                mensagemAtiva = False
-                perguntaFeita = False
-                escolha = 2
+                if not escolhaFeita:
+                    mensagemAtiva = False
+                    escolha = 2
+                    respostas.registrarEscolha(tela, escolha, idPergunta, nome, email)
+                    idQuestoesRepetidas.append(idPergunta)
+                    posicao_atual.pop(0)
+                    escolhaFeita = True
 
 
     #MOVIMENTAÇÃO
@@ -157,10 +172,11 @@ while True:
         tela.blit(skin_inimigo, i)
     if protagonista.colliderect((i)):
         inimigo_atual = i
+        escolhaFeita = False
         
         if not mensagemAtiva:
             respostas.setListadeColisao([])
-            pergunta.definirPergunta()
+            pergunta.definirPergunta(idQuestoesRepetidas)
             idPergunta = pergunta.getIdPergunta()
             respostas.definirRespostas(idPergunta)
             mensagemAtiva = True
@@ -171,5 +187,7 @@ while True:
             for rect in respostas.getListaDeColisao():
                 pygame.draw.rect(tela, (0, 0, 255), pygame.Rect(rect))
         
-             
+        if len(idQuestoesRepetidas) == pergunta.getQuantidadePerguntas()[0]:
+            idQuestoesRepetidas = []
+
     pygame.display.update()
