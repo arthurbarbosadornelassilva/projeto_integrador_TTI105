@@ -10,14 +10,15 @@ class Game_movimentos:
         #definições básicas e variáveis globais
         self.larguraTela = 960
         self.alturaTela = 680
-        self.x = 30
-        self.y = 30
+        # self.x = 30
+        # self.y = 30
         self.tela = pygame.display.set_mode((self.larguraTela, self.alturaTela))
-        self.plano_de_fundo = pygame.image.load('img\Fundo1.1.png')
-        self.fonte = pygame.font.SysFont('arial', 20, False, False)
-        #definindo specs inimigo
-        self.skin_inimigo = pygame.image.load('img\Virus01.png').convert_alpha()
-        self.inimigo = self.skin_inimigo.get_rect()
+        # self.plano_de_fundo = pygame.image.load('img\Fundo1.1.png')
+        # self.fonte = pygame.font.SysFont('arial', 20, False, False)
+        # #definindo specs inimigo
+        # self.skin_inimigo = pygame.image.load('img\Virus01.png').convert_alpha()
+        # self.inimigo = self.skin_inimigo.get_rect()
+
         #clock do jogo
         self.relogio = pygame.time.Clock()
 
@@ -36,7 +37,6 @@ class Game_movimentos:
                     pygame.quit()
                     exit()
             
-
             #PARA MUDANÇA DE TELAS
             self.states[self.gameStateManager.get_state()].rodando()
 
@@ -74,7 +74,7 @@ class Level:
         self.protagonista = pygame.draw.rect(self.tela, (255, 255, 50), (self.x, self.y, lado_x, lado_y))
 
         #definindo o retângulo para passar de fase:
-        proxFase = pygame.draw.rect(self.tela, (255, 0, 0), (900, 565, 40, 40))
+        proxFase = pygame.draw.rect(self.tela, (255, 0, 0), (915, 580, 50, 60))
         if self.protagonista.colliderect(proxFase):
             mensagem = self.fonte.render("Game Over", False, "yellow")
             self.tela.blit(mensagem, (self.larguraTela/2 - 40, 320))
@@ -123,7 +123,7 @@ class Level:
             return inimigo
 
         inimigo1 = retangulos_inimigos((350,250))
-        inimigo2 = retangulos_inimigos((125, 600))
+        inimigo2 = retangulos_inimigos((125, 565))
         inimigo3 = retangulos_inimigos((650, 250))
         inimigo4 = retangulos_inimigos((500, 500))
         
