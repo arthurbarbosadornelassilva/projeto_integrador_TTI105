@@ -1,62 +1,65 @@
 import pygame
 from sys import exit
 
-#ABAIXO ESTAREMOS DEFININDO FUNÇÕES PARA A CRIAÇÃO DE DIFERENTES TELAS DO JOGO
+LARGURATELA = 960
+ALTURATELA = 680
+FPS = 60
 
-pygame.init()
+class Game:
+    def __init__(self):
+        pygame.init()
+        self.tela = pygame.display.set_mode((LARGURATELA, ALTURATELA))
+        self.relogio = pygame.time.Clock()
 
-pygame.display.set_caption("Vac-Man.exe")
+        self.gameStateManager = GameStateManager('start')
+        self.start = Start(self.tela, self.gameStateManager)
+        self.level = Level(self.tela, self.gameStateManager)
 
-largura_tela = 600
-altura_tela = 400
-x = 100
-y = 100
-tela = pygame.display.set_mode((largura_tela, altura_tela))
-fonte = pygame.font.SysFont("arial", 30, True, True)
-relogio = pygame.time.Clock()
-
-#DEFININDO BOOLEAN DO LOOP PRINCIPAL
-rodando = True
-
-#DEFININDO O BOOLEAN DE MENU PADRÃO 
-cena = "menu_jogo"
-
-#DEFININDO O LOOP
-while rodando:
-    relogio.tick(30)
-    keys = pygame.key.get_pressed()
-    
-    #DEFININDO BOOLEAN DO JOGO
-    if cena == "jogando":
+        self.states = {'start': self.start, 'level': self.level}
         
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                rodando = False
+    def rodando(self):
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit
+                # if event.type == pygame.KEYDOWN:
+                #     if event.key == pygame.K_RETURN:
+                #         self.gameStateManager.set_state('level')
 
-        texto_padrao = fonte.render("Está rodando", True, "white")
-        tela.blit(texto_padrao, ((largura_tela/ 2), (altura_tela/ 2)))
+            self.states[self.gameStateManager.get_state()].rodando()
 
-        if keys[pygame.K_0]:
-            cena = "fim_jogo"
-    
-    #DEFININDO BOOLEAN DO GAME OVER
-    elif cena == "fim_jogo":
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                rodando = False
+            self.relogio.tick(FPS)
+            pygame.display.update()
 
-        tela.fill((0, 0, 0))
-        texto_final = fonte.render("Game Over", True, "white")
-        tela.blit(texto_final, ((largura_tela/ 2), (altura_tela/ 2)))
+class Level:
+    def __init__ (self, display, gameStateManager):
+        self.display = display
+        self.gameStateManager = gameStateManager
+    def rodando(self):
+        self.display.fill('blue')
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_ESCAPE]:
+            self.gameStateManager.set_state('start')
 
-    #DEFININDO TELA MENU
-    elif cena == "menu_jogo":
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                rodando = False
+class Start:
+    def __init__ (self, display, gameStateManager):
+        self.display = display
+        self.gameStateManager = gameStateManager
+    def rodando(self):
+        self.display.fill('red')
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_RETURN]:
+            self.gameStateManager.set_state('level')
 
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    cena = "jogando"
+class GameStateManager:
+    def __init__ (self, currentState):
+        self.currentState = currentState
+    def get_state(self):
+        return self.currentState
+    def set_state(self, state):
+        self.currentState = state
 
-    pygame.display.update()
+if __name__ == '__main__':
+    game = Game()
+    game.rodando()

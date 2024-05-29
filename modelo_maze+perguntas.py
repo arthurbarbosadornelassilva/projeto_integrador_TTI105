@@ -48,7 +48,6 @@ posicoes_possiveis = [(350, 250), (125, 600), (650, 250), (500, 500)]
 posicao_atual = []
 ultima_posicao = None
 
-
 #LOOP DO JOGO
 while True:
     relogio.tick(60)

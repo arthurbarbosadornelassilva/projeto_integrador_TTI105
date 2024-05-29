@@ -1,3 +1,4 @@
+#importando pacote Classes e random
 from Classes import Pergunta, Resposta, DAO
 from random import choice
 #ativando o pygame
@@ -22,6 +23,7 @@ plano_de_fundo = pygame.image.load('img/Fundo1.1.png')
 
 #definindo specs inimigo
 skin_inimigo = pygame.image.load('img/Virus01.png').convert_alpha()
+inimigo = skin_inimigo.get_rect()
 
 #clock do jogo
 relogio = pygame.time.Clock()
@@ -38,18 +40,19 @@ respostas = Resposta.Resposta('font/PixelifySans-Regular.ttf', 20, 100)
 inimigo_atual = None
 
 def retangulos_inimigos(posicao):
-    skin_inimigo = pygame.image.load('img/Virus01.png').convert_alpha()
     inimigo = skin_inimigo.get_rect()
     inimigo.topleft = (posicao)
     return inimigo
 
-posicoes_possiveis = ((350, 250), (125, 600), (650, 250), (500, 500))
+posicoes_possiveis = [(350, 250), (125, 600), (650, 250), (500, 500)]
 posicao_atual = []
-
+ultima_posicao = None
 
 #LOOP DO JOGO
 while True:
     relogio.tick(60)
+
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -67,7 +70,7 @@ while True:
                 # mensagemAtiva = False
                 # perguntaFeita = False
                 escolha = 1
-                posicao_atual.pop(inimigo.index(inimigo_atual))
+                posicao_atual.pop(0)
                 mensagemAtiva = False
             elif rectP3.collidepoint(event.pos):
                 mensagemAtiva = False
@@ -90,8 +93,7 @@ while True:
     #definindo o retângulo para passar de fase:
     proxFase = pygame.draw.rect(tela, (255, 0, 0), (900, 565, 40, 40))
     if protagonista.colliderect(proxFase):
-        pygame.quit()
-        exit()
+        exit
 
     if not mensagemAtiva:
         if keys[pygame.K_LEFT] and x > 5:
@@ -137,9 +139,19 @@ while True:
 
     #definindo posição do inimigo
     if len(posicao_atual) == 0:
-        posicao_atual = choice(posicoes_possiveis)
-    i = retangulos_inimigos(posicao_atual)
-    print(posicao_atual)
+        while True:
+            posicao_escolhida = choice(posicoes_possiveis)
+            if type(ultima_posicao) != tuple:
+                posicao_atual.append(posicao_escolhida)
+                ultima_posicao = posicao_escolhida
+                break
+            else:
+                if ultima_posicao != posicao_escolhida:
+                    posicao_atual.append(posicao_escolhida)
+                    ultima_posicao = posicao_escolhida
+                    break 
+    i = retangulos_inimigos(posicao_atual[0])
+    
     # -----------
     
     if not mensagemAtiva:
@@ -159,6 +171,5 @@ while True:
             respostas.exibirRespostas(tela, altura)
             for rect in respostas.getListaDeColisao():
                 pygame.draw.rect(tela, (0, 0, 255), pygame.Rect(rect))
-        
-             
+            
     pygame.display.update()

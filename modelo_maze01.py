@@ -2,117 +2,165 @@
 import pygame
 from sys import exit
 
-pygame.init()
+class Game_movimentos:
+    def __init__ (self):
+        pygame.init()
+        pygame.display.set_caption('Vac-Man.exe')
 
-#definições básicas e variáveis globais
-pygame.display.set_caption('Vac-Man.exe')
+        #definições básicas e variáveis globais
+        self.larguraTela = 960
+        self.alturaTela = 680
+        self.x = 30
+        self.y = 30
+        self.tela = pygame.display.set_mode((self.larguraTela, self.alturaTela))
+        self.plano_de_fundo = pygame.image.load('img\Fundo1.1.png')
+        self.fonte = pygame.font.SysFont('arial', 20, False, False)
+        #definindo specs inimigo
+        self.skin_inimigo = pygame.image.load('img\Virus01.png').convert_alpha()
+        self.inimigo = self.skin_inimigo.get_rect()
+        #clock do jogo
+        self.relogio = pygame.time.Clock()
 
-larguraTela = 960
-alturaTela = 680
-x = 30
-y = 30
-tela = pygame.display.set_mode((larguraTela, alturaTela))
-plano_de_fundo = pygame.image.load('img\Fundo1.1.png')
-#definindo specs inimigo
-skin_inimigo = pygame.image.load('img\Virus01.png').convert_alpha()
-inimigo = skin_inimigo.get_rect()
-#clock do jogo
-relogio = pygame.time.Clock()
+        #DEFININFO MUDANÇA DAS TELAS:
+        self.gameStateManager = GameStateManager('start')
+        self.start = Start(self.tela, self.gameStateManager)
+        self.level = Level(self.tela, self.gameStateManager)
+
+        self.states = {'start': self.start, 'level': self.level}
 
 #LOOP DO JOGO
-while True:
-    relogio.tick(60)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            exit()
-    
-    #Em LIMITETELA a configuração dos limites das bordas era feita de maneira diferente desta aqui
-    #Além disso, aqui é possível utilizar o 'get_at' como identificador de cor e limitador da tela
-    keys = pygame.key.get_pressed()
-    lado_x = 40
-    lado_y = 40
-    cor_padrão = (255, 174, 201, 255)
+    def rodando(self):
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+            
 
-    tela.fill((0,0,0))
-    tela.blit(plano_de_fundo, (0, 0))
-    #definindo protagonista
-    protagonista = pygame.draw.rect(tela, (255, 255, 50), (x, y, lado_x, lado_y))
+            #PARA MUDANÇA DE TELAS
+            self.states[self.gameStateManager.get_state()].rodando()
 
-    #definindo o retângulo para passar de fase:
-    proxFase = pygame.draw.rect(tela, (255, 0, 0), (900, 565, 40, 40))
-    if protagonista.colliderect(proxFase):
-        pygame.quit()
-        exit()
-    
-    if keys[pygame.K_LEFT] and x > 5:
-        x -= 5
-        cor_cima = tela.get_at((x - 1, y))
-        cor_baixo = tela.get_at((x - 1, y + 39))
-        if cor_cima == (255, 0, 0, 255) or cor_baixo == (255, 0, 0, 255):
-            x == x
-        elif cor_cima != cor_padrão or cor_baixo != cor_padrão:
-            x += 5
+            #PARA ATUALIZAR A TELA
+            pygame.display.update()
+            self.relogio.tick(60)
 
-    if keys[pygame.K_RIGHT] and x < 960 -lado_x -5:
-        x += 5
-        cor_cima = tela.get_at((x + 39 , y))
-        cor_baixo = tela.get_at((x + 39, y + 39))
-        if cor_cima == (255, 0, 0, 255) or cor_baixo == (255, 0, 0, 255):
-            x == x
-        elif cor_cima != cor_padrão or cor_baixo != cor_padrão:
-            x -= 5
+class Level:
+    def __init__ (self, display, gameStateManager):
+        self.display = display
+        self.gameStateManager = gameStateManager
 
-    if keys[pygame.K_UP] and y > 5:
-        y -= 5
-        cor_cima = tela.get_at((x, y - 1))
-        cor_baixo = tela.get_at((x + 39, y - 1))
-        if cor_cima == (255, 0, 0, 255) or cor_baixo == (255, 0, 0, 255):
-            y == y
-        elif cor_cima != cor_padrão or cor_baixo != cor_padrão:
-            y += 5
+        #definições básicas e variáveis globais
+        self.larguraTela = 960
+        self.alturaTela = 680
+        self.x = 30
+        self.y = 30
+        self.tela = pygame.display.set_mode((self.larguraTela, self.alturaTela))
+        self.plano_de_fundo = pygame.image.load('img\Fundo1.1.png')
+        self.fonte = pygame.font.SysFont('arial', 20, False, False)
+        #definindo specs inimigo
+        self.skin_inimigo = pygame.image.load('img\Virus01.png').convert_alpha()
+        self.inimigo = self.skin_inimigo.get_rect()
+    def rodando(self):
+        #Em LIMITETELA a configuração dos limites das bordas era feita de maneira diferente desta aqui
+        #Além disso, aqui é possível utilizar o 'get_at' como identificador de cor e limitador da tela
+        keys = pygame.key.get_pressed()
+        lado_x = 40
+        lado_y = 40
+        cor_padrão = (255, 174, 201, 255)
 
-    if keys[pygame.K_DOWN] and y < 720 -lado_y -5:
-        y += 5
-        cor_cima = tela.get_at((x, y + 39))
-        cor_baixo = tela.get_at((x + 39, y + 39))
-        if cor_cima == (255, 0, 0, 255) or cor_baixo == (255, 0, 0, 255):
-            y == y
-        if cor_cima != cor_padrão or cor_baixo != cor_padrão:
-            y -= 5
+        self.tela.fill((0,0,0))
+        self.tela.blit(self.plano_de_fundo, (0, 0))
+        #definindo protagonista
+        self.protagonista = pygame.draw.rect(self.tela, (255, 255, 50), (self.x, self.y, lado_x, lado_y))
 
-    #definindo os inimigos:
-    class inimigos:
+        #definindo o retângulo para passar de fase:
+        proxFase = pygame.draw.rect(self.tela, (255, 0, 0), (900, 565, 40, 40))
+        if self.protagonista.colliderect(proxFase):
+            mensagem = self.fonte.render("Game Over", False, "yellow")
+            self.tela.blit(mensagem, (self.larguraTela/2 - 40, 320))
+        
+        if keys[pygame.K_LEFT] and self.x > 5:
+            self.x -= 5
+            cor_cima = self.tela.get_at((self.x - 1, self.y))
+            cor_baixo = self.tela.get_at((self.x - 1, self.y + 39))
+            if cor_cima == (255, 0, 0, 255) or cor_baixo == (255, 0, 0, 255):
+                self.x == self.x
+            elif cor_cima != cor_padrão or cor_baixo != cor_padrão:
+                self.x += 5
 
+        if keys[pygame.K_RIGHT] and self.x < 960 -lado_x -5:
+            self.x += 5
+            cor_cima = self.tela.get_at((self.x + 39 , self.y))
+            cor_baixo = self.tela.get_at((self.x + 39, self.y + 39))
+            if cor_cima == (255, 0, 0, 255) or cor_baixo == (255, 0, 0, 255):
+                self.x == self.x
+            elif cor_cima != cor_padrão or cor_baixo != cor_padrão:
+                self.x -= 5
+
+        if keys[pygame.K_UP] and self.y > 5:
+            self.y -= 5
+            cor_cima = self.tela.get_at((self.x, self.y - 1))
+            cor_baixo = self.tela.get_at((self.x + 39, self.y - 1))
+            if cor_cima == (255, 0, 0, 255) or cor_baixo == (255, 0, 0, 255):
+                self.y == self.y
+            elif cor_cima != cor_padrão or cor_baixo != cor_padrão:
+                self.y += 5
+
+        if keys[pygame.K_DOWN] and self.y < 720 -lado_y -5:
+            self.y += 5
+            cor_cima = self.tela.get_at((self.x, self.y + 39))
+            cor_baixo = self.tela.get_at((self.x + 39, self.y + 39))
+            if cor_cima == (255, 0, 0, 255) or cor_baixo == (255, 0, 0, 255):
+                self.y == self.y
+            if cor_cima != cor_padrão or cor_baixo != cor_padrão:
+                self.y -= 5
+        
         def retangulos_inimigos(posicao):
             skin_inimigo = pygame.image.load("img\Virus01.png")
             inimigo = skin_inimigo.get_rect()
             inimigo.topleft = (posicao)
-            tela.blit(skin_inimigo, inimigo)
+            self.tela.blit(skin_inimigo, inimigo)
             return inimigo
+
+        inimigo1 = retangulos_inimigos((350,250))
+        inimigo2 = retangulos_inimigos((125, 600))
+        inimigo3 = retangulos_inimigos((650, 250))
+        inimigo4 = retangulos_inimigos((500, 500))
         
-    inimigo1 = inimigos.retangulos_inimigos((350,250))
-    inimigo2 = inimigos.retangulos_inimigos((125, 600))
-    inimigo3 = inimigos.retangulos_inimigos((650, 250))
-    inimigo4 = inimigos.retangulos_inimigos((500, 500))
+        if self.protagonista.colliderect(inimigo1):
+            print('colidiu')
+        elif self.protagonista.colliderect(inimigo2):
+            print('colidiu')
+        elif self.protagonista.colliderect(inimigo3):
+            print('colidiu')
+        elif self.protagonista.colliderect(inimigo4):
+            print('colidiu')    
+        #self.display.fill('blue')
 
-    #     def base(posicao):
-    #         return pygame.draw.rect(tela, (255, 0, 0), posicao)
-        
-    # inimigo1 = inimigos.base((350, 250, 40, 40))
-    # inimigo2 = inimigos.base((125, 600, 40, 40))
-    # inimigo3 = inimigos.base((650, 250, 40, 40))
-    # inimigo4 = inimigos.base((500, 500, 40, 40))
+        #DEFININDO MUDANÇA PARA START
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_ESCAPE]:
+            self.gameStateManager.set_state('start')
 
-    if protagonista.colliderect(inimigo1):
-        print('colidiu')
-    elif protagonista.colliderect(inimigo2):
-        print('colidiu')
-    elif protagonista.colliderect(inimigo3):
-        print('colidiu')
-    elif protagonista.colliderect(inimigo4):
-        print('colidiu')
+class Start:
+    def __init__ (self, display, gameStateManager):
+        self.display = display
+        self.gameStateManager = gameStateManager
+    def rodando(self):
+        self.display.fill('red')
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_RETURN]:
+            self.gameStateManager.set_state('level')
 
-    #definindo função de pause:
+class GameStateManager:
+    def __init__ (self, currentState):
+        self.currentState = currentState
+    def get_state(self):
+        return self.currentState
+    def set_state(self, state):
+        self.currentState = state
 
-    pygame.display.update()
+if __name__ == '__main__':
+    jogo = Game_movimentos()
+    jogo.rodando()
+    jogo.retangulos_inimigos()
