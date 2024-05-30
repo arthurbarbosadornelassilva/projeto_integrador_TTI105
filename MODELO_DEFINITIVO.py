@@ -30,22 +30,7 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    self.rectP1 = pygame.Rect(self.respostas.getListaDeColisao()[0])
-                    self.rectP2 = pygame.Rect(self.respostas.getListaDeColisao()[1])
-                    self.rectP3 = pygame.Rect(self.respostas.getListaDeColisao()[2])
-                
-                    if self.rectP1.collidepoint(event.pos):
-                        self.escolha = 0
-                    elif self.rectP2.collidepoint(event.pos):
-                        self.escolha = 1
-                        self.posicao_atual.pop(0)
-                        self.mensagemAtiva = False
-                    elif self.rectP3.collidepoint(event.pos):
-                        self.mensagemAtiva = False
-                        self.perguntaFeita = False
-                        self.escolha = 2
-
+                    
             #PARA MUDANÇA DE TELAS
             controlador_telas = self.states[self.gameStateManager.get_state()]
             controlador_telas.rodando()
@@ -76,7 +61,7 @@ class Level:
         self.inimigo = self.skin_inimigo.get_rect()
 
         #clock do jogo
-        self.relogio = pygame.time.Clock()
+        # self.relogio = pygame.time.Clock()
 
         #variáveis das perguntas
         self.mensagemAtiva = False
@@ -89,17 +74,34 @@ class Level:
         #definindo os inimigos:
         self.inimigo_atual = None
 
-        def retangulos_inimigos(posicao):
-            inimigo = skin_inimigo.get_rect()
-            inimigo.topleft = (posicao)
-            return inimigo
-
         self.posicoes_possiveis = [(350, 250), (125, 600), (650, 250), (500, 500)]
         self.posicao_atual = []
         self.ultima_posicao = None
 
-    def rodando():
+    def retangulos_inimigos(self, posicao):
+        inimigo = self.skin_inimigo.get_rect()
+        inimigo.topleft = (posicao)
+        return inimigo
+
+    def rodando(self):
         #MOVIMENTAÇÃO
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                self.rectP1 = pygame.Rect(self.respostas.getListaDeColisao()[0])
+                self.rectP2 = pygame.Rect(self.respostas.getListaDeColisao()[1])
+                self.rectP3 = pygame.Rect(self.respostas.getListaDeColisao()[2])
+            
+                if self.rectP1.collidepoint(event.pos):
+                    self.escolha = 0
+                elif self.rectP2.collidepoint(event.pos):
+                    self.escolha = 1
+                    self.posicao_atual.pop(0)
+                    self.mensagemAtiva = False
+                elif self.rectP3.collidepoint(event.pos):
+                    self.mensagemAtiva = False
+                    self.perguntaFeita = False
+                    self.escolha = 2
+        
         keys = pygame.key.get_pressed()
         lado_x = 40
         lado_y = 40
@@ -170,8 +172,9 @@ class Level:
                     if self.ultima_posicao != posicao_escolhida:
                         self.posicao_atual.append(posicao_escolhida)
                         self.ultima_posicao = posicao_escolhida
-                        break 
-        i = retangulos_inimigos(self.posicao_atual[0])
+                        break
+        inimigo = self.retangulos_inimigos(self.posicao_atual[0]) 
+        i = inimigo
         
         # -----------
         
