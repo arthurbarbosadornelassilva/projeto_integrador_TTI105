@@ -60,9 +60,6 @@ class Level:
         self.skin_inimigo = pygame.image.load('img/Virus01.png').convert_alpha()
         self.inimigo = self.skin_inimigo.get_rect()
 
-        #clock do jogo
-        # self.relogio = pygame.time.Clock()
-
         #variáveis das perguntas
         self.mensagemAtiva = False
         self.dificuldade = 1
@@ -188,7 +185,7 @@ class Level:
             
             if not self.mensagemAtiva:
                 self.respostas.setListadeColisao([])
-                self.pergunta.definirPergunta()
+                self.pergunta.definirPergunta(self.idQuestoesRepetidas)
                 idPergunta = self.pergunta.getIdPergunta()
                 self.respostas.definirRespostas(idPergunta)
                 self.mensagemAtiva = True
