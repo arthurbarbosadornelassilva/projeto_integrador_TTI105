@@ -114,7 +114,7 @@ def clear_fields():
 # Atualizar campos de resposta conforme a dificuldade
 def update_response_fields(*args):
     difficulty = variable1.get()
-    if difficulty == "Vest":
+    if difficulty == 'Vest':
         for i in range(5):
             response_widgets[i][0].place(x=20, y=220 + 60 * i)
             response_widgets[i][1].place(x=60, y=220 + 60 * i)
@@ -129,7 +129,7 @@ def update_response_fields(*args):
 
 def update_response_combobox(*args):
     difficulty = variable1.get()
-    if difficulty == "Vest":
+    if difficulty == 'Vest':
         values = [response_widgets[i][1].get() for i in range(5)]
     else:
         values = [response_widgets[i][1].get() for i in range(3)]
