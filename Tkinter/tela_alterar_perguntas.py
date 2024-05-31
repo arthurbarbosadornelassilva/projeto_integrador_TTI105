@@ -165,7 +165,7 @@ questao_entry.place(x=20, y=120)
 
 response_widgets = []
 for i in range(5):
-    resposta_label = ctk.CTkLabel(tela, font=font1, text=f'R{i+1}:', text_color='#000', bg_color="#161C25")
+    resposta_label = ctk.CTkLabel(tela, font=font1, text=f'R{i+1}:', text_color='#FFFFFF', bg_color="#161C25")
     resposta_textbox = ctk.CTkEntry(tela, font=font1, text_color='#000', fg_color='#fff', width=280)
     resposta_textbox.bind("<KeyRelease>", update_response_combobox)  # Update combobox values on key release
     response_widgets.append((resposta_label, resposta_textbox))
