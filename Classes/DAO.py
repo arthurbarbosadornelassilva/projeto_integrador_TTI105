@@ -9,18 +9,18 @@ class DAO():
         cursor = conexao.cursor()
 
         query = ("SELECT pergunta, idPergunta FROM perguntas "
-                 f"WHERE dificuldade = {dificuldade} "
+                 f"WHERE dificuldade LIKE \'%{dificuldade}\' "
                  "ORDER BY RAND() "
-                 "LIMIT 1;")
+                 "LIMIT 1; ")
         cursor.execute(query)
-
+        
         for item in cursor:
             pergunta = item[0]
             idPergunta = item[1]
         
         query = ("SELECT COUNT(pergunta) "
                  "FROM perguntas "
-                 f"WHERE dificuldade = {dificuldade}")
+                 f"WHERE dificuldade LIKE \'%{dificuldade}\' ")
         cursor.execute(query)
 
         for item in cursor:
@@ -36,7 +36,7 @@ class DAO():
         conexao = connection.obterConexao()
         cursor = conexao.cursor() 
 
-        query = ("SELECT idPergunta, dificuldade, pergunta FROM perguntas")
+        query = ("SELECT idPergunta, dificuldade, pergunta, qtdErros FROM perguntas")
         cursor.execute(query)
         linhas = cursor.fetchall()
 

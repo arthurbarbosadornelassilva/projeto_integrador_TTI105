@@ -30,7 +30,11 @@ relogio = pygame.time.Clock()
 
 #variáveis das perguntas
 mensagemAtiva = False
+<<<<<<< Updated upstream
 dificuldade = 3 #as dificuldades são as seguintes: 1: fácil | 2: médio | 3: difícil | 4: final/chefão
+=======
+dificuldade = "Fácil" #as dificuldades são as seguintes: Fácil | Médio | Difícil | Vest
+>>>>>>> Stashed changes
 escolhaFeita = False
 idQuestoesRepetidas = []
 
@@ -52,6 +56,10 @@ posicoes_possiveis = [(350, 250), (125, 600), (650, 250), (500, 500)]
 posicao_atual = []
 ultima_posicao = None
 
+#definição usuario
+jogador = Usuario.Usuario()
+nome = jogador.setNomeAluno("José Aldo")
+email = jogador.setEmailProfessor("JoseAldo@teste.com")
 
 #LOOP DO JOGO
 while True:

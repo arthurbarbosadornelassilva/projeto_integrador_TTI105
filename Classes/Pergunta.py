@@ -9,7 +9,7 @@ class Pergunta():
         self.__coordenadas = coordenadas
         self.__pergunta = str
         self.__idPergunta = str
-        self.__dificuldade = 0
+        self.__dificuldade = ""
         self.__quantidadePerguntas = 0
         self.__alturaTotalPergunta = 0
 
