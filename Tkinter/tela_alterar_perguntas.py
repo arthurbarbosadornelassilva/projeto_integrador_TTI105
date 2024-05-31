@@ -151,7 +151,7 @@ font2 = ('Arial', 10, 'bold')
 
 dificuldade_label = ctk.CTkLabel(tela, font=font1, text='Dificuldade: ', text_color='#fff', bg_color="#161C25")
 dificuldade_label.place(x=20, y=40)
-options = ['Fácil', 'Médio', 'Difícil']
+options = ['Fácil', 'Médio', 'Difícil', ' Vest ']
 variable1 = StringVar()
 dificuldade_options = ctk.CTkComboBox(tela, font=font1, text_color='#000', fg_color='#fff', width=90, variable=variable1, values=options, state='readonly')
 dificuldade_options.set('Fácil')
