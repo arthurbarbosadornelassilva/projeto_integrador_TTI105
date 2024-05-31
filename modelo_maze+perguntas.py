@@ -30,11 +30,7 @@ relogio = pygame.time.Clock()
 
 #variáveis das perguntas
 mensagemAtiva = False
-<<<<<<< Updated upstream
-dificuldade = 3 #as dificuldades são as seguintes: 1: fácil | 2: médio | 3: difícil | 4: final/chefão
-=======
 dificuldade = "Fácil" #as dificuldades são as seguintes: Fácil | Médio | Difícil | Vest
->>>>>>> Stashed changes
 escolhaFeita = False
 idQuestoesRepetidas = []
 
