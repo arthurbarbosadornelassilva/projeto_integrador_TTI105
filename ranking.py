@@ -2,23 +2,23 @@ import customtkinter as ctk
 from mysql.connector import connect
 from Classes import ConnectionFactory
 
-class AplicativoRanking:
-    def __init__(self, raiz):
-        self.raiz = raiz
-        self.raiz.title("Ranking")
-        self.raiz.geometry(f"{960}x{680}")
+class Ranking:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Ranking")
+        self.root.geometry(f"{960}x{680}")
 
         self.criar_widgets()
         self.carregar_dados()
 
     def criar_widgets(self):
-        self.titulo_label = ctk.CTkLabel(self.raiz, text="Ranking dos Estudantes", font=("Helvetica", 24))
+        self.titulo_label = ctk.CTkLabel(self.root, text="Ranking dos Estudantes", font=("Helvetica", 24))
         self.titulo_label.pack(pady=20)
 
-        self.quadro_ranking = ctk.CTkFrame(self.raiz, width=480, height=300)
+        self.quadro_ranking = ctk.CTkFrame(self.root, width=480, height=300)
         self.quadro_ranking.pack(pady=10)
 
-        self.botao_recarregar = ctk.CTkButton(self.raiz, text="Recarregar", command=self.carregar_dados)
+        self.botao_recarregar = ctk.CTkButton(self.root, text="Recarregar", command=self.carregar_dados)
         self.botao_recarregar.pack(pady=10)
 
     def carregar_dados(self):
@@ -67,7 +67,7 @@ if __name__ == "__main__":
     ctk.set_appearance_mode("dark")
     ctk.set_default_color_theme("blue")
 
-    raiz = ctk.CTk()
-    app = AplicativoRanking(raiz)
-    raiz.mainloop()
+    root = ctk.CTk()
+    app = Ranking(root)
+    root.mainloop()
 
