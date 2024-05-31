@@ -1,39 +1,27 @@
 import customtkinter as ctk
 from tkinter import messagebox
 from PIL import ImageTk, Image
-from Classes import DAO
+from Classes import DAO, Usuario
 
 # DAO 
 dao = DAO.DAO()
+#Usuario instance
+aluno = Usuario.Usuario()
 
 def validar_login():
     nome = nome_entry.get()
     email = email_entry.get()
 
-    existe = dao.existeAluno(nome, email)
+    existe = dao.existeAluno(nome, email)[0]
 
-    if existe:
+    if existe == 1:
         messagebox.showinfo("Sucesso", f"Seja bem vindo, {nome}")
-        # Open new window upon successful login
-        new_window()
+        aluno.setNomeAluno(nome)
+        aluno.setEmailAluno(email)
+
     else:
         messagebox.showerror("Falha no login", "Nome ou email inválidos")
 
-def new_window():
-    # Janela de sucesso
-    root_new = ctk.CTk()
-    root_new.geometry(f"{960}x{680}")
-    root_new.title("New Window")
-
-    # Labels da janela
-    frame_new = ctk.CTkFrame(master=root_new, width=450, height=450, corner_radius=10)
-    frame_new.place(relx=0.5, rely=0.5, anchor="center")
-
-    label_new = ctk.CTkLabel(master=frame_new, width=200, height=60, corner_radius=10,
-                              fg_color=("gray70", "gray35"), text="You have successfully logged-in")
-    label_new.place(relx=0.5, rely=0.3, anchor="center")
-
-    root_new.mainloop()
 
 # Configurações iniciais do customtkinter
 ctk.set_appearance_mode("System")

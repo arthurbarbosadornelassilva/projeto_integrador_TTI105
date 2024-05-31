@@ -1,22 +1,26 @@
 import customtkinter as ctk
 from tkinter import messagebox
-from Classes import DAO
+from Classes import DAO, Usuario
 from PIL import ImageTk, Image
 
 # DAO instance
 dao = DAO.DAO()
+# Usuario instance
+professor = Usuario.Usuario()
 
 def salvar_cadastro():
     nome = nome_entry.get()
     email = email_entry.get()
 
-    existe = dao.existeProfessor(nome, email)
+    existe = dao.existeProfessor(nome, email)[0]
 
-    if existe or "@piaget.com" not in email:
+    if existe == 1 or "@piaget.com" not in email:
         messagebox.showerror("Falha no cadastro", "Nome ou email inválidos")
     else:
         messagebox.showinfo("Cadastro realizado", "Suas informações foram cadastradas com sucesso")
         dao.registrarProfessor(nome, email)
+        professor.setNomeProfessor(nome)
+        professor.setEmailProfessor(email)
 
 # Configurações iniciais do customtkinter
 ctk.set_appearance_mode("System")  

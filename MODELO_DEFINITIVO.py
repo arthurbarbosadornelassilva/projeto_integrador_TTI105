@@ -65,7 +65,9 @@ class Level:
 
         #variáveis das perguntas
         self.mensagemAtiva = False
-        self.perguntaFeita = False
+        self.dificuldade = 1
+        self.escolhaFeita = False
+        self.idQuestoesRepetidas = []
 
         #definindo os objetos:
         self.pergunta = Pergunta.Pergunta('font/PixelifySans-SemiBold.ttf', 20, (100, 100))
@@ -92,14 +94,15 @@ class Level:
                 self.rectP3 = pygame.Rect(self.respostas.getListaDeColisao()[2])
             
                 if self.rectP1.collidepoint(event.pos):
-                    self.escolha = 0
-                elif self.rectP2.collidepoint(event.pos):
-                    self.escolha = 1
-                    self.posicao_atual.pop(0)
                     self.mensagemAtiva = False
+                    self.escolha = 0
+                    self.respostas.registrarEscolha(self.tela, self.escolha,)
+                elif self.rectP2.collidepoint(event.pos):
+                    self.mensagemAtiva = False
+                    self.escolha = 1
+                    
                 elif self.rectP3.collidepoint(event.pos):
                     self.mensagemAtiva = False
-                    self.perguntaFeita = False
                     self.escolha = 2
         
         keys = pygame.key.get_pressed()

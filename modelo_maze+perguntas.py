@@ -32,7 +32,7 @@ relogio = pygame.time.Clock()
 mensagemAtiva = False
 dificuldade = 3 #as dificuldades são as seguintes: 1: fácil | 2: médio | 3: difícil | 4: final/chefão
 escolhaFeita = False
-idQuestoesRepetidas = [1, 1, 1, 1, 1, 1, 1]
+idQuestoesRepetidas = []
 
 #definindo os objetos:
 pergunta = Pergunta.Pergunta('font/PixelifySans-SemiBold.ttf', 20, (100, 100))

@@ -34,16 +34,13 @@ class DAO():
     def pegarMultiplasPerguntas(self):
         connection = ConnectionFactory.ConnectionFactory()
         conexao = connection.obterConexao()
-        cursor = conexao.cursor()
-        perguntas = [] 
+        cursor = conexao.cursor() 
 
-        query = ("SELECT * FROM perguntas")
+        query = ("SELECT idPergunta, dificuldade, pergunta FROM perguntas")
         cursor.execute(query)
+        linhas = cursor.fetchall()
 
-        for item in cursor:
-            perguntas += item
-
-        return perguntas
+        return linhas
     
     def registrarErro(self, idPergunta):
         connection = ConnectionFactory.ConnectionFactory()
@@ -95,45 +92,28 @@ class DAO():
 
         return idPergunta
     
-    def removerPergunta(self, pergunta):
+    def removerPergunta(self, idPergunta):
         connection = ConnectionFactory.ConnectionFactory()
         conexao = connection.obterConexao()
         cursor = conexao.cursor()
 
         query = ("DELETE FROM perguntas "
-                 f"WHERE pergunta = {pergunta}")
+                 f"WHERE idPergunta = {idPergunta}")
         cursor.execute(query)
         conexao.commit()
 
-        query = ("SELECT idPergunta FROM perguntas "
-                 f"WHERE pergunta = {pergunta}")
-        cursor.execute(query)
-
-        for item in cursor:
-            idPergunta = item
-
         cursor.close()
         conexao.close()
-
-        return idPergunta
     
-    def modificarPergunta(self, pergunta, novaPergunta=None, novaDificuldade=None):
+    def modificarPergunta(self, idPergunta, novaPergunta=None, novaDificuldade=None):
         connection = ConnectionFactory.ConnectionFactory()
         conexao = connection.obterConexao()
         cursor = conexao.cursor()
 
-        if novaPergunta != None and novaDificuldade != None:
-            query = ("UPDATE perguntas "
-                    f"SET pergunta = {novaPergunta}, dificuldade = {novaDificuldade} "
-                    f"WHERE pergunta = {pergunta};")
-        elif novaPergunta != None:
-            query = ("UPDATE perguntas "
-                    f"SET pergunta = {novaPergunta} "
-                    f"WHERE pergunta = {pergunta};")
-        elif novaDificuldade != None:
-            query = ("UPDATE perguntas "
-                    f"SET dificuldade = {novaDificuldade} "
-                    f"WHERE pergunta = {pergunta};")
+        query = ("UPDATE perguntas "
+                f"SET pergunta = {novaPergunta}, dificuldade = {novaDificuldade} "
+                f"WHERE idPergunta = {idPergunta};")
+    
         cursor.execute(query)
         conexao.commit()
 
@@ -163,6 +143,21 @@ class DAO():
         conexao.close()
         
         return (respostas, respostaCorreta)
+    
+    def pegarMultiplasRespostas(self, idPergunta):
+        connection = ConnectionFactory.ConnectionFactory()
+        conexao = connection.obterConexao()
+        cursor = conexao.cursor()
+
+        query = ("SELECT resposta, respostaCorreta FROM respostas "
+                 f"WHERE idPergunta = {idPergunta} ")
+        cursor.execute(query)
+        teste = cursor.fetchall()
+
+        cursor.close()
+        conexao.close()
+        
+        return teste
     
     def adicionarRespostas(self, idPergunta, listaRespostaCorreta:tuple, novasRespostas:tuple):
         connection = ConnectionFactory.ConnectionFactory()
@@ -231,7 +226,7 @@ class DAO():
         cursor = conexao.cursor()
 
         query = ("INSERT INTO aluno (nome, email) "
-                 f"VALUES (\'{nome}\', \'{email})\')")
+                 f"VALUES (\'{nome}\', \'{email}\')")
         cursor.execute(query)
         conexao.commit()
 
@@ -244,9 +239,12 @@ class DAO():
         cursor = conexao.cursor()
 
         query = ("SELECT EXISTS (SELECT nome, email FROM aluno "
-                 f"WHERE nome = \'{nome}\' AND email = \'{email})\'")
-        existe = cursor.execute(query)
+                 f"WHERE nome = \'{nome}\' AND email = \'{email}\')")
+        cursor.execute(query)
         
+        for item in cursor:
+            existe = item
+
         cursor.close()
         conexao.close()
 

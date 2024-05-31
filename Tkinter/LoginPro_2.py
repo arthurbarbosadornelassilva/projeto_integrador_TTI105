@@ -1,6 +1,6 @@
 import customtkinter as ctk
 import tkinter
-from Classes import  DAO
+from Classes import  DAO, Usuario
 from tkinter import messagebox
 from PIL import ImageTk, Image
 
@@ -10,17 +10,20 @@ ctk.set_default_color_theme("green")
 
 # DAO
 dao = DAO.DAO()
+# Usuario
+professor = Usuario.Usuario()
 
 def validar_login():
     nome = nome_entry.get()
     email = email_entry.get()
 
-    existe = dao.existeProfessor(nome, email)
+    existe = dao.existeProfessor(nome, email)[0]
 
-    if existe:
+    if existe == 1:
         messagebox.showinfo("Sucesso", f"Seja bem vindo, {nome}")
-        # nova janela caso sucesso
-        new_window()
+        professor.setNomeProfessor(nome)
+        professor.setEmailProfessor(email)
+
     else:
         messagebox.showerror("Falha no login", "Nome ou email inválidos")
 
