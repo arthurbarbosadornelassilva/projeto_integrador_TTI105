@@ -1,49 +1,39 @@
-
 import customtkinter as ctk
 from tkinter import *
 from tkinter import ttk
 import tkinter as tk
 from tkinter import messagebox
-import sqlite3
+from Classes import DAO
 
-# Conectar ao banco de dados e criar a tabela se não existir
-def connect_db():
-    conn = sqlite3.connect('perguntas.db')
-    cursor = conn.cursor()
-    cursor.execute('''CREATE TABLE IF NOT EXISTS perguntas (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        dificuldade TEXT,
-                        questao TEXT,
-                        resposta1 TEXT,
-                        resposta2 TEXT,
-                        resposta3 TEXT,
-                        resposta4 TEXT,
-                        resposta5 TEXT,
-                        resposta_correta TEXT)''')
-    conn.commit()
-    conn.close()
+#DAO instance
+dao = DAO.DAO()
+
+# Variáveis para funcionar
+valores = None
 
 # Função para adicionar pergunta ao banco de dados
 def add_question():
-    conn = sqlite3.connect('perguntas.db')
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO perguntas (dificuldade, questao, resposta1, resposta2, resposta3, resposta4, resposta5, resposta_correta) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                   (variable1.get(), questao_entry.get("1.0", END).strip(), response_widgets[0][1].get(), response_widgets[1][1].get(), response_widgets[2][1].get(),
-                    response_widgets[3][1].get(), response_widgets[4][1].get(), correct_response_var.get()))
-    conn.commit()
-    conn.close()
+    lista_respostas = []
+    lista_respostas_corretas = []
+    dao.adicionarPergunta(questao_entry.get("1.0", END).strip(), variable1.get())
+    idPergunta = dao.pegarPergunta(variable1.get())[1]
+    for resposta in valores:
+        lista_respostas.append(resposta)
+        if resposta == correct_response_var.get():
+            lista_respostas_corretas.append(1)
+        else:
+            lista_respostas_corretas.append(0)
+    dao.adicionarRespostas(idPergunta, lista_respostas_corretas, lista_respostas)
+
+
     fetch_questions()
     clear_fields()
     # print(f'Resposta correta: {correct_response_var.get()}')  # Print da resposta correta
 
 # Função para buscar todas as perguntas do banco de dados
 def fetch_questions():
-    conn = sqlite3.connect('perguntas.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM perguntas")
-    rows = cursor.fetchall()
-    conn.close()
-    update_treeview(rows)
+    linhas = dao.pegarMultiplasPerguntas()
+    update_treeview(linhas)
 
 # Função para atualizar o treeview
 def update_treeview(rows):
@@ -57,27 +47,29 @@ def delete_question():
     selected_item = tree.selection()
     if selected_item:
         item = tree.item(selected_item)
-        question_id = item['values'][0]
-        conn = sqlite3.connect('perguntas.db')
-        cursor = conn.cursor()
-        cursor.execute("DELETE FROM perguntas WHERE id = ?", (question_id,))
-        conn.commit()
-        conn.close()
+        idPergunta = item['values'][0]
+        dao.removerPergunta(idPergunta)
+        dao.removerRespostas(idPergunta)
         fetch_questions()
 
 # Função para atualizar pergunta
 def update_question():
     selected_item = tree.selection()
     if selected_item:
+        lista_respostas = []
+        lista_respostas_corretas = []
+
         item = tree.item(selected_item)
-        question_id = item['values'][0]
-        conn = sqlite3.connect('perguntas.db')
-        cursor = conn.cursor()
-        cursor.execute("UPDATE perguntas SET dificuldade = ?, questao = ?, resposta1 = ?, resposta2 = ?, resposta3 = ?, resposta4 = ?, resposta5 = ?, resposta_correta = ? WHERE id = ?",
-                       (variable1.get(), questao_entry.get("1.0", END).strip(), response_widgets[0][1].get(), response_widgets[1][1].get(), response_widgets[2][1].get(),
-                        response_widgets[3][1].get(), response_widgets[4][1].get(), correct_response_var.get(), question_id))
-        conn.commit()
-        conn.close()
+        idPergunta = item['values'][0]
+        dao.modificarPergunta(idPergunta, questao_entry.get("1.0", END).strip(), variable1.get())
+        for resposta in valores:
+            lista_respostas.append(resposta)
+            if resposta == correct_response_var.get():
+                lista_respostas_corretas.append(1)
+            else:
+                lista_respostas_corretas.append(0)
+        dao.modificarRespostas(idPergunta, lista_respostas_corretas, lista_respostas)
+        
         fetch_questions()
         print(f'Resposta correta atualizada: {correct_response_var.get()}')  # Print da resposta correta
 
@@ -86,18 +78,30 @@ def fill_fields(event):
     selected_item = tree.selection()
     if selected_item:
         item = tree.item(selected_item)
-        question = item['values']
-        variable1.set(question[1])
+        questao = item['values']
+        resposta = dao.pegarMultiplasRespostas(questao[0])
+        variable1.set(questao[1])
         questao_entry.delete("1.0", END)
-        questao_entry.insert(END, question[2])
+        questao_entry.insert(END, questao[2])
         for i in range(5):
             response_widgets[i][1].delete(0, END)
-        response_widgets[0][1].insert(0, question[3])
-        response_widgets[1][1].insert(0, question[4])
-        response_widgets[2][1].insert(0, question[5])
-        response_widgets[3][1].insert(0, question[6])
-        response_widgets[4][1].insert(0, question[7])
-        correct_response_var.set(question[8])
+
+        dificuldade = variable1.get()
+        if dificuldade == 'Vest':    
+            response_widgets[0][1].insert(0, resposta[0][0])
+            response_widgets[1][1].insert(0, resposta[1][0])
+            response_widgets[2][1].insert(0, resposta[2][0])
+            response_widgets[3][1].insert(0, resposta[3][0])
+            response_widgets[4][1].insert(0, resposta[4][0])
+        else:
+            response_widgets[0][1].insert(0, resposta[0][0])
+            response_widgets[1][1].insert(0, resposta[1][0])
+            response_widgets[2][1].insert(0, resposta[2][0])
+        for i in resposta:
+            if i[1] == 1:
+                resposta_correta = resposta[resposta.index(i)][0]
+        
+        correct_response_var.set(resposta_correta)
         update_response_combobox()
 
 # Função para limpar campos
@@ -110,7 +114,7 @@ def clear_fields():
 # Atualizar campos de resposta conforme a dificuldade
 def update_response_fields(*args):
     difficulty = variable1.get()
-    if difficulty == 'Difícil':
+    if difficulty == "Difícil":
         for i in range(5):
             response_widgets[i][0].place(x=20, y=220 + 60 * i)
             response_widgets[i][1].place(x=60, y=220 + 60 * i)
@@ -125,12 +129,15 @@ def update_response_fields(*args):
 
 def update_response_combobox(*args):
     difficulty = variable1.get()
-    if difficulty == 'Difícil':
+    if difficulty == "Difícil":
         values = [response_widgets[i][1].get() for i in range(5)]
     else:
         values = [response_widgets[i][1].get() for i in range(3)]
     correct_response_combo['values'] = values
     correct_response_var.set('')
+
+    global valores
+    valores = values
 
 
 tela = ctk.CTk()
@@ -197,7 +204,6 @@ tree.place(x=360, y=20)
 tree.bind("<ButtonRelease-1>", fill_fields)
 
 
-connect_db()
 fetch_questions()
 update_response_fields()  # Initial call to display the default number of response fields
 tela.mainloop()
