@@ -17,6 +17,16 @@ class Game:
         self.tela = pygame.display.set_mode((self.larguraTela, self.alturaTela))
         self.relogio = pygame.time.Clock()
 
+        #definindo os objetos:
+        self.pergunta = Pergunta.Pergunta('font/PixelifySans-SemiBold.ttf', 20, (100, 100))
+        self.respostas = Resposta.Resposta('font/PixelifySans-Regular.ttf', 20, 100)
+
+        #variáveis das perguntas
+        self.mensagemAtiva = False
+        self.dificuldade = 1
+        self.escolhaFeita = False
+        self.idQuestoesRepetidas = []
+
         #DEFININFO MUDANÇA DAS TELAS:
         self.gameStateManager = GameStateManager('start')
         self.start = Start(self.tela, self.gameStateManager)
@@ -30,6 +40,21 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    self.rectP1 = pygame.Rect(self.respostas.getListaDeColisao()[0])
+                    self.rectP2 = pygame.Rect(self.respostas.getListaDeColisao()[1])
+                    self.rectP3 = pygame.Rect(self.respostas.getListaDeColisao()[2])
+                
+                    if self.rectP1.collidepoint(event.pos):
+                        self.mensagemAtiva = False
+                        self.escolha = 0
+                        self.respostas.registrarEscolha(self.tela, self.escolha)
+                    elif self.rectP2.collidepoint(event.pos):
+                        self.mensagemAtiva = False
+                        self.escolha = 1
+                    elif self.rectP3.collidepoint(event.pos):
+                        self.mensagemAtiva = False
+                        self.escolha = 2
                     
             #PARA MUDANÇA DE TELAS
             controlador_telas = self.states[self.gameStateManager.get_state()]
