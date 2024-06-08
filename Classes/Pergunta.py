@@ -12,6 +12,7 @@ class Pergunta():
         self.__dificuldade = ""
         self.__quantidadePerguntas = 0
         self.__alturaTotalPergunta = 0
+        self.__mensagemAtiva = False
 
     #Métodos
     def definirPergunta(self, questoesRepetidas):
@@ -60,6 +61,15 @@ class Pergunta():
     def getQuantidadePerguntas(self):
         return self.__quantidadePerguntas
     
+    def getMensagemAtiva(self):
+        return self.__mensagemAtiva
+    
+    def getDificuldade(self):
+        return self.__dificuldade
+
     #Setters
     def setDificuldade(self, dificuldade):
         self.__dificuldade = dificuldade
+    
+    def setMensagemAtiva(self, ativa):
+        self.__mensagemAtiva = ativa

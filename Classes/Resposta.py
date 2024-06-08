@@ -11,6 +11,7 @@ class Resposta():
         self.__respostaCorreta = int
         self.__listaRespostaCorreta = list
         self.__listaDeColisao = []
+        self.__qtdAcertos = 0
     
     #Métodos
     def definirRespostas(self, idPergunta):
@@ -51,6 +52,7 @@ class Resposta():
         dao = DAO.DAO()
         if escolha == self.__respostaCorreta:
             dao.registrarAcerto(nomeJogador, emailJogador)
+            self.__qtdAcertos += 1
             print("Acerto")
         else:
             #vida -= 1 -> atributo da classe jogo
@@ -90,6 +92,8 @@ class Resposta():
         return self.__respostaCorreta
     def getListaDeColisao(self):
         return self.__listaDeColisao
+    def getQtdAcertos(self):
+        return self.__qtdAcertos
     
     def setListadeColisao(self, listaDeColisao):
         self.__listaDeColisao = listaDeColisao
