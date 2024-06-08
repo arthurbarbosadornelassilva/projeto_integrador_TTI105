@@ -193,4 +193,6 @@ while True:
         if len(idQuestoesRepetidas) == pergunta.getQuantidadePerguntas()[0]:
             idQuestoesRepetidas = []
 
+        print(pergunta.getQuantidadePerguntas())
+
     pygame.display.update()

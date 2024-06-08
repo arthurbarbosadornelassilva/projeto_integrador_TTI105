@@ -6,6 +6,10 @@ from random import choice
 from sys import exit
 from Classes import DAO, Usuario, Pergunta, Resposta, ConnectionFactory
 
+# Declaração variáveis globais
+pergunta = Pergunta.Pergunta('font/PixelifySans-SemiBold.ttf', 20, (100, 100))
+respostas = Resposta.Resposta('font/PixelifySans-Regular.ttf', 20, 100)
+
 class App:
     def __init__(self):
         self.aluno = Usuario.Usuario()
@@ -151,9 +155,10 @@ class Game:
         # Definindo mudança das telas
         self.gameStateManager = GameStateManager('start')
         self.start = Start(self.tela, self.gameStateManager)
-        self.level = Level(self.tela, self.gameStateManager)
+        self.level1 = Level1(self.tela, self.gameStateManager)
+        self.level2 = Level2(self.tela, self.gameStateManager)
 
-        self.states = {'start': self.start, 'level1': self.level}
+        self.states = {'start': self.start, 'level1': self.level1, 'level2': self.level2}
 
     def rodando(self):
         while True:
@@ -199,7 +204,7 @@ class Game:
             self.relogio.tick(60)
 
 
-class Level:
+class Level1:
     def __init__(self, display, gameStateManager):
         self.display = display
         self.gameStateManager = gameStateManager
@@ -220,12 +225,8 @@ class Level:
         self.inimigo = self.skin_inimigo.get_rect()
 
         # Definindo os objetos:
-        self.pergunta = Pergunta.Pergunta('font/PixelifySans-SemiBold.ttf', 20, (100, 100))
-        self.respostas = Resposta.Resposta('font/PixelifySans-Regular.ttf', 20, 100)
-        global pergunta
-        pergunta = self.pergunta
-        global respostas
-        respostas = self.respostas
+        self.pergunta = pergunta
+        self.respostas = respostas
 
         # Variáveis das perguntas
         self.dificuldade = "Fácil"
@@ -272,7 +273,168 @@ class Level:
         if respostas.getQtdAcertos() == 4:
             proxFase = pygame.draw.rect(self.tela, (255, 0, 0), (900, 565, 40, 40))
             if protagonista.colliderect(proxFase):
-                pygame.quit()
+                self.gameStateManager.set_state('level2')
+                respostas.setQtdAcertos(0)
+
+        if not self.mensagemAtiva:
+            if keys[pygame.K_LEFT] and self.x > 5:
+                self.x -= 5
+                cor_cima = self.tela.get_at((self.x - 1, self.y))
+                cor_baixo = self.tela.get_at((self.x - 1, self.y + 39))
+                if cor_cima == (255, 0, 0, 255) or cor_baixo == (255, 0, 0, 255):
+                    self.x == self.x
+                elif cor_cima != cor_padrão or cor_baixo != cor_padrão:
+                    self.x += 5
+
+            if keys[pygame.K_RIGHT] and self.x < 960 - lado_x - 5:
+                self.x += 5
+                cor_cima = self.tela.get_at((self.x + 39, self.y))
+                cor_baixo = self.tela.get_at((self.x + 39, self.y + 39))
+                if cor_cima == (255, 0, 0, 255) or cor_baixo == (255, 0, 0, 255):
+                    self.x == self.x
+                elif cor_cima != cor_padrão or cor_baixo != cor_padrão:
+                    self.x -= 5
+
+            if keys[pygame.K_UP] and self.y > 5:
+                self.y -= 5
+                cor_cima = self.tela.get_at((self.x, self.y - 1))
+                cor_baixo = self.tela.get_at((self.x + 39, self.y - 1))
+                if cor_cima == (255, 0, 0, 255) or cor_baixo == (255, 0, 0, 255):
+                    self.y == self.y
+                elif cor_cima != cor_padrão or cor_baixo != cor_padrão:
+                    self.y += 5
+
+            if keys[pygame.K_DOWN] and self.y < 720 - lado_y - 5:
+                self.y += 5
+                cor_cima = self.tela.get_at((self.x, self.y + 39))
+                cor_baixo = self.tela.get_at((self.x + 39, self.y + 39))
+                if cor_cima == (255, 0, 0, 255) or cor_baixo == (255, 0, 0, 255):
+                    self.y == self.y
+                if cor_cima != cor_padrão or cor_baixo != cor_padrão:
+                    self.y -= 5
+
+        # Perguntas:
+        # Definindo mouse
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        rectMouse = pygame.Rect(mouse_x - 5, mouse_y - 5, 10, 10)
+
+        # Definindo posição do inimigo
+        if len(posicao_atual) == 0:
+            while True:
+                posicao_escolhida = choice(self.posicoes_possiveis)
+                if type(self.ultima_posicao) != tuple:
+                    posicao_atual.append(posicao_escolhida)
+                    self.ultima_posicao = posicao_escolhida
+                    break
+                else:
+                    if self.ultima_posicao != posicao_escolhida:
+                        posicao_atual.append(posicao_escolhida)
+                        self.ultima_posicao = posicao_escolhida
+                        break
+        if respostas.getQtdAcertos != 4:
+            inimigo = self.retangulos_inimigos(posicao_atual[0])
+            i = inimigo
+
+        if not self.mensagemAtiva and respostas.getQtdAcertos() != 4:
+            self.tela.blit(self.skin_inimigo, i)
+        if protagonista.colliderect((i)):
+            self.inimigo_atual = i
+            escolhaFeita = False
+
+            if not self.mensagemAtiva:
+                self.respostas.setListadeColisao([])
+                self.pergunta.definirPergunta(idQuestoesRepetidas)
+                idPergunta = self.pergunta.getIdPergunta()
+                self.respostas.definirRespostas(idPergunta)
+                pergunta.setMensagemAtiva(True)
+            if self.mensagemAtiva:
+                self.pergunta.exibirPergunta(self.tela, 860, 500, (255, 255, 255))
+                altura = self.pergunta.getAlturaTotalPergunta()
+                self.respostas.exibirRespostas(self.tela, altura)
+                for rect in self.respostas.getListaDeColisao():
+                    pygame.draw.rect(self.tela, (0, 0, 255), pygame.Rect(rect))
+            
+            if len(idQuestoesRepetidas) == pergunta.getQuantidadePerguntas()[0]:
+                idQuestoesRepetidas = []
+
+        print(respostas.getRespostaCorreta(), pergunta.getQuantidadePerguntas())
+        # Fita adesiva para o código funcionar
+        global lista_de_colisao
+        lista_de_colisao = self.respostas.getListaDeColisao()
+        global id_pergunta
+        id_pergunta = self.pergunta.getIdPergunta()
+
+class Level2:
+    def __init__(self, display, gameStateManager):
+        self.display = display
+        self.gameStateManager = gameStateManager
+
+        # Variáveis padrão
+        self.larguraTela = 960
+        self.alturaTela = 680
+        self.x = 30
+        self.y = 30
+        self.tela = pygame.display.set_mode((self.larguraTela, self.alturaTela))
+
+        # Variável da fonte
+        self.fonte = pygame.font.SysFont("Arial", 20, True, False)
+        self.plano_de_fundo = pygame.image.load('img/Fundo1.1.png')
+
+        # Definindo specs inimigo
+        self.skin_inimigo = pygame.image.load('img/Virus01.png').convert_alpha()
+        self.inimigo = self.skin_inimigo.get_rect()
+
+        # Definindo os objetos:
+        self.pergunta = pergunta
+        self.respostas = respostas
+
+        # Variáveis das perguntas
+        self.dificuldade = "Fácil"
+        self.pergunta.setDificuldade(self.dificuldade)
+    
+
+        # Definindo os inimigos:
+        self.inimigo_atual = None
+        self.posicoes_possiveis = [(350, 250), (125, 600), (650, 250), (500, 500)]
+
+        global posicao_atual
+        posicao_atual = []
+        self.ultima_posicao = None
+
+    def retangulos_inimigos(self, posicao):
+        inimigo = self.skin_inimigo.get_rect()
+        inimigo.topleft = (posicao)
+        return inimigo
+
+    def rodando(self):
+        # Movimentação
+        keys = pygame.key.get_pressed()
+        lado_x = 40
+        lado_y = 40
+        cor_padrão = (255, 174, 201, 255)
+
+        self.tela.fill((0, 0, 0))
+        self.tela.blit(self.plano_de_fundo, (0, 0))
+
+        # Definindo protagonista
+        protagonista = pygame.draw.rect(self.tela, (255, 255, 50), (self.x, self.y, lado_x, lado_y))
+
+        # Definindo mensagemAtiva
+        self.mensagemAtiva = pergunta.getMensagemAtiva()
+
+        # Definindo variáveis globais improvisadas
+        global escolhaFeita
+        escolhaFeita = False
+        global idQuestoesRepetidas
+        idQuestoesRepetidas = []
+
+
+        # Definindo o retângulo para passar de fase:
+        if respostas.getQtdAcertos() == 4:
+            proxFase = pygame.draw.rect(self.tela, (255, 0, 0), (900, 565, 40, 40))
+            if protagonista.colliderect(proxFase):
+                #self.gameStateManager.set_state('level2')
+                respostas.setQtdAcertos(0)
                 exit()
 
         if not self.mensagemAtiva:
@@ -330,10 +492,11 @@ class Level:
                         posicao_atual.append(posicao_escolhida)
                         self.ultima_posicao = posicao_escolhida
                         break
-        inimigo = self.retangulos_inimigos(posicao_atual[0])
-        i = inimigo
+        if respostas.getQtdAcertos != 4:
+            inimigo = self.retangulos_inimigos(posicao_atual[0])
+            i = inimigo
 
-        if not self.mensagemAtiva:
+        if not self.mensagemAtiva and respostas.getQtdAcertos() != 4:
             self.tela.blit(self.skin_inimigo, i)
         if protagonista.colliderect((i)):
             self.inimigo_atual = i
@@ -355,17 +518,12 @@ class Level:
             if len(idQuestoesRepetidas) == pergunta.getQuantidadePerguntas()[0]:
                 idQuestoesRepetidas = []
 
-        # Definindo mudança para start
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_ESCAPE]:
-            self.gameStateManager.set_state('start')
-
+        print(respostas.getRespostaCorreta(), pergunta.getQuantidadePerguntas())
         # Fita adesiva para o código funcionar
         global lista_de_colisao
         lista_de_colisao = self.respostas.getListaDeColisao()
         global id_pergunta
         id_pergunta = self.pergunta.getIdPergunta()
-        print(respostas.getRespostaCorreta())
 
 
 class Start:

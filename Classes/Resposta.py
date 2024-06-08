@@ -97,3 +97,5 @@ class Resposta():
     
     def setListadeColisao(self, listaDeColisao):
         self.__listaDeColisao = listaDeColisao
+    def setQtdAcertos(self, qtdAcertos):
+        self.__qtdAcertos = qtdAcertos
