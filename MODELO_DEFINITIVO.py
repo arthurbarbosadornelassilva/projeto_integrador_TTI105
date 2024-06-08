@@ -55,7 +55,7 @@ class Game:
                     elif self.rectP3.collidepoint(event.pos):
                         self.mensagemAtiva = False
                         self.escolha = 2
-                    
+            print(self.respostas.getListaDeColisao())
             #PARA MUDANÇA DE TELAS
             controlador_telas = self.states[self.gameStateManager.get_state()]
             controlador_telas.rodando()
@@ -77,8 +77,7 @@ class Level:
         self.y = 30
         self.tela = pygame.display.set_mode((self.larguraTela, self.alturaTela))
 
-        #variável da fonte
-        self.fonte = pygame.font.SysFont("Arial", 20, True, False)
+        #variável da fundo
         self.plano_de_fundo = pygame.image.load('img/Fundo1.1.png')
 
         #definindo specs inimigo
@@ -87,12 +86,13 @@ class Level:
 
         #variáveis das perguntas
         self.mensagemAtiva = False
-        self.dificuldade = 1
+        self.dificuldade = "Fácil" #as dificuldades são as seguintes: Fácil | Médio | Difícil | Vest
         self.escolhaFeita = False
         self.idQuestoesRepetidas = []
 
         #definindo os objetos:
         self.pergunta = Pergunta.Pergunta('font/PixelifySans-SemiBold.ttf', 20, (100, 100))
+        self.pergunta.setDificuldade(self.dificuldade)
         self.respostas = Resposta.Resposta('font/PixelifySans-Regular.ttf', 20, 100)
 
         #definindo os inimigos:
@@ -114,18 +114,32 @@ class Level:
                 self.rectP1 = pygame.Rect(self.respostas.getListaDeColisao()[0])
                 self.rectP2 = pygame.Rect(self.respostas.getListaDeColisao()[1])
                 self.rectP3 = pygame.Rect(self.respostas.getListaDeColisao()[2])
-            
+                
                 if self.rectP1.collidepoint(event.pos):
-                    self.mensagemAtiva = False
-                    self.escolha = 0
-                    self.respostas.registrarEscolha(self.tela, self.escolha,)
+                    if not self.escolhaFeita:
+                        self.mensagemAtiva = False
+                        self.escolha = 0
+                        self.respostas.registrarEscolha(self.tela, self.escolha, idPergunta, self.nome, self.email)
+                        self.posicao_atual.pop(0)
+                        self.idQuestoesRepetidas.append(idPergunta)
+                        self.escolhaFeita = True
                 elif self.rectP2.collidepoint(event.pos):
-                    self.mensagemAtiva = False
-                    self.escolha = 1
+                    if not self.escolhaFeita:
+                        self.mensagemAtiva = False
+                        self.escolha = 1
+                        self.respostas.registrarEscolha(self.tela, self.escolha, idPergunta, self.nome, self.email)
+                        self.posicao_atual.pop(0)
+                        self.idQuestoesRepetidas.append(idPergunta)
+                        self.escolhaFeita = True
                     
                 elif self.rectP3.collidepoint(event.pos):
-                    self.mensagemAtiva = False
-                    self.escolha = 2
+                    if not self.escolhaFeita:
+                        self.mensagemAtiva = False
+                        self.escolha = 2
+                        self.respostas.registrarEscolha(self.tela, self.escolha, idPergunta, self.nome, self.email)
+                        self.posicao_atual.pop(0)
+                        self.idQuestoesRepetidas.append(idPergunta)
+                        self.escolhaFeita = True
         
         keys = pygame.key.get_pressed()
         lado_x = 40
@@ -141,7 +155,7 @@ class Level:
         #definindo o retângulo para passar de fase:
         proxFase = pygame.draw.rect(self.tela, (255, 0, 0), (900, 565, 40, 40))
         if protagonista.colliderect(proxFase):
-            exit
+            exit()
 
         if not self.mensagemAtiva:
             if keys[pygame.K_LEFT] and self.x > 5:
@@ -198,16 +212,14 @@ class Level:
                         self.posicao_atual.append(posicao_escolhida)
                         self.ultima_posicao = posicao_escolhida
                         break
-        inimigo = self.retangulos_inimigos(self.posicao_atual[0]) 
-        i = inimigo
+        i = self.retangulos_inimigos(self.posicao_atual[0]) 
         
         # -----------
         
         if not self.mensagemAtiva:
             self.tela.blit(self.skin_inimigo, i)
         if protagonista.colliderect((i)):
-            inimigo_atual = i
-            
+            self.inimigo_atual = i
             if not self.mensagemAtiva:
                 self.respostas.setListadeColisao([])
                 self.pergunta.definirPergunta(self.idQuestoesRepetidas)

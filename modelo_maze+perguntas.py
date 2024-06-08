@@ -17,8 +17,7 @@ x = 30
 y = 30
 tela = pygame.display.set_mode((larguraTela, alturaTela))
 
-#variável da fonte
-fonte = pygame.font.SysFont("Arial", 20, True, False)
+#variável do fundo
 plano_de_fundo = pygame.image.load('img/Fundo1.1.png')
 
 #definindo specs inimigo
@@ -106,7 +105,7 @@ while True:
     
     #definindo protagonista
     protagonista = pygame.draw.rect(tela, (255, 255, 50), (x, y, lado_x, lado_y))
-
+    print(respostas.getListaDeColisao())
     #definindo o retângulo para passar de fase:
     proxFase = pygame.draw.rect(tela, (255, 0, 0), (900, 565, 40, 40))
     if protagonista.colliderect(proxFase):
