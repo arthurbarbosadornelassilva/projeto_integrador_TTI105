@@ -63,7 +63,7 @@ class TelaCadastro:
 
 
     # Cor de fundo
-    bg_image = pygame.image.load("img/fundo1.png")
+    bg_image = pygame.image.load("img/fundoofc.png")
     bg_image = pygame.transform.scale(bg_image, (WIDTH, HEIGHT))
 
 
