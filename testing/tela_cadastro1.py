@@ -1,6 +1,6 @@
 import pygame
 
-class TelaCadastro:
+class TelaLogin:
     
 
     # Função para criar um botão com bordas arredondadas
@@ -54,7 +54,7 @@ class TelaCadastro:
     pygame.init()
 
     #fontees
-    font1 = pygame.font.Font('PixelifySans-Bold.ttf', 70)
+    font1 = pygame.font.Font('PixelifySans-Bold.ttf', 85)
 
     # Criar a tela
     WIDTH, HEIGHT = 960, 680
@@ -69,9 +69,9 @@ class TelaCadastro:
 
     # Criar o botão
     button_radius = 20  # Define o raio para os cantos arredondados do botão
-    cadastro_aluno_button = create_rounded_button(380, 430, 240, 60, (106, 13, 173), button_radius, text="Cadastro Aluno", text_color=(255, 255, 255), font_size=40)
-    cadastro_prof_button = create_rounded_button(380, 500, 240, 60, (106, 13, 173), button_radius, text="Cadastro Prof", text_color=(255, 255, 255), font_size=40)
-
+    cadastro_aluno_button = create_rounded_button(380, 410, 240, 60, (106, 13, 173), button_radius, text="Cadastro Aluno", text_color=(255, 255, 255), font_size=40)
+    cadastro_prof_button = create_rounded_button(380, 480, 240, 60, (106, 13, 173), button_radius, text="Cadastro Prof", text_color=(255, 255, 255), font_size=40)
+    voltar_button = create_rounded_button(470, 570, 80, 40, (106, 13, 173), button_radius, text="voltar", text_color=(255, 255, 255), font_size=30)
 
 
     # Loop principal
@@ -82,14 +82,16 @@ class TelaCadastro:
                 running = False
 
         screen.blit(bg_image, (0,0))  # Preencher a tela com a cor de fundo
-        draw_text("CADASTRO", font1, (255,255,255), screen, WIDTH // 1.94,330)
+        draw_text("CADASTRO", font1, (255,255,255), screen, WIDTH // 1.91,330)
 
 
         # Desenhar o botão com bordas arredondadas
         if draw_rounded_button(screen, cadastro_aluno_button):
-            print("Botão Cadastro!")
+            print("Botão aluno!")
         if draw_rounded_button(screen, cadastro_prof_button):
-            print("Botão Login!")
+            print("Botão prof!")
+        if draw_rounded_button(screen, voltar_button):
+            print("Botão voltar!")
 
         pygame.display.flip()
         pygame.display.update()
