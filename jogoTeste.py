@@ -857,18 +857,3 @@ class GameStateManager:
 
 if __name__ == '__main__':
     app = App()
-
-
-class GameStateManager:
-    def __init__(self, initial_state):
-        self.state = initial_state
-
-    def get_state(self):
-        return self.state
-
-    def set_state(self, state):
-        self.state = state
-
-
-if __name__ == "__main__":
-    app = App()
