@@ -170,11 +170,12 @@ class Game:
                     pygame.quit()
                     exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    print(pygame.mouse.get_pos())
-                    if pergunta.getMensagemAtiva() == True:
-                        self.rectP1 = pygame.Rect(lista_de_colisao[0])
-                        self.rectP2 = pygame.Rect(lista_de_colisao[1])
-                        self.rectP3 = pygame.Rect(lista_de_colisao[2])
+                    if len(lista_de_colisao) != 0:
+                        print(pygame.mouse.get_pos())
+                        if pergunta.getMensagemAtiva() == True:
+                            self.rectP1 = pygame.Rect(lista_de_colisao[0])
+                            self.rectP2 = pygame.Rect(lista_de_colisao[1])
+                            self.rectP3 = pygame.Rect(lista_de_colisao[2])
 
                         if self.rectP1.collidepoint(event.pos):
                             if not escolhaFeita:
