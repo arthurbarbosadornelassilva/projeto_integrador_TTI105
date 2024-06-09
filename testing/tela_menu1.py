@@ -14,7 +14,7 @@ class TelaMenu:
         button['clicked'] = False
         button['text'] = text
         button['text_color'] = text_color
-        button['font'] = pygame.font.SysFont('PixelifySans-Regular.ttf', font_size)
+        button['font'] = pygame.font.SysFont('font/PixelifySans-Regular.ttf', font_size)
         button['text_surface'] = button['font'].render(button['text'], True, button['text_color'])
         return button
 
@@ -54,8 +54,8 @@ class TelaMenu:
     pygame.init()
 
     #fontees
-    font1 = pygame.font.Font('PixelifySans-Bold.ttf', 45)
-    font2 = pygame.font.Font('PixelifySans-Bold.ttf', 85)
+    font1 = pygame.font.Font('font/PixelifySans-Bold.ttf', 45)
+    font2 = pygame.font.Font('font/PixelifySans-Bold.ttf', 85)
 
 
     # Criar a tela

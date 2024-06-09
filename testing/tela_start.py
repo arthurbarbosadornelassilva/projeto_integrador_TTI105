@@ -11,11 +11,11 @@ class TelaExplicacao:
         self.running = True
 
         # Carregar imagens
-        self.up_arrow = pygame.image.load("w.png")
-        self.down_arrow = pygame.image.load("s.png")
-        self.left_arrow = pygame.image.load("a.png")
-        self.right_arrow = pygame.image.load("d.png")
-        self.space = pygame.image.load("space.png")
+        self.up_arrow = pygame.image.load("img/w.png")
+        self.down_arrow = pygame.image.load("img/s.png")
+        self.left_arrow = pygame.image.load("img/a.png")
+        self.right_arrow = pygame.image.load("img/d.png")
+        self.space = pygame.image.load("img/space.png")
 
     def draw_text(self, text, font, color, surface, x, y):
         textobj = font.render(text, True, color)

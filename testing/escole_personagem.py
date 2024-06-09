@@ -18,9 +18,9 @@ class EscolhePersonagem:
         self.BLACK = (0, 0, 0)
 
         # Carregar imagens dos personagens e fundo
-        self.char1_image = pygame.image.load('linf_b.png')
-        self.char2_image = pygame.image.load('linf_t.png')
-        self.bg_image = pygame.image.load('Fundo veia.png')
+        self.char1_image = pygame.image.load('img/linf_b.png')
+        self.char2_image = pygame.image.load('img/linf_t.png')
+        self.bg_image = pygame.image.load('img/Fundo veia.png')
         self.bg_image = pygame.transform.scale(self.bg_image, (self.screen_width, self.screen_height))
 
         # Dimensões dos personagens
@@ -36,7 +36,7 @@ class EscolhePersonagem:
         self.char3_pos = (self.screen_width // 2 - self.char_width // 2, self.screen_height // 4 - self.char_height // 4 + self.y_offset)
 
         # Fonte
-        self.font1 = pygame.font.Font('PixelifySans-Regular.ttf', 32)
+        self.font1 = pygame.font.Font('font/PixelifySans-Regular.ttf', 32)
 
         # Botão Voltar
         self.voltar_button = self.create_rounded_button(430, 500, 100, 50, (106, 13, 173), 10, text="Voltar")
