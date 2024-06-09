@@ -5,14 +5,14 @@ from os import path
 pygame.init()
 
 #definições básicas e variáveis globais
-pygame.display.set_caption('Vac-Man')
+pygame.display.set_caption('Parabéns')
 
 larguraTela = 960
 alturaTela = 680
 x = 30
 y = 30
 tela = pygame.display.set_mode((larguraTela, alturaTela))
-plano_de_fundo = pygame.image.load('img\Fundo1.1.png')
+plano_de_fundo = pygame.image.load('img\Fundo veia.png')
 
 #Fonte
 fonte = pygame.font.Font('font/PixelifySans-Bold.ttf', 76)
@@ -36,7 +36,7 @@ while True:
     cor_padrão = (255, 174, 201, 255)
 
     tela.fill((255,45,70))
-    titulo = fonte.render("Vac-Man", True, (0, 0, 0))
+    titulo = fonte.render("Parabéns", True, (0, 0, 0))
 
     tela.blit(titulo, (larguraTela // 2 - titulo.get_width() // 2, 50)) 
 
