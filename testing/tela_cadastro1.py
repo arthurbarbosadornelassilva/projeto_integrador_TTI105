@@ -1,6 +1,6 @@
 import pygame
 
-class TelaLogin:
+class TelaCadastro:
     
 
     # Função para criar um botão com bordas arredondadas
