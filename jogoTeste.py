@@ -168,6 +168,7 @@ class Game:
                     exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if len(lista_de_colisao) != 0:
+                        print(pygame.mouse.get_pos())
                         if pergunta.getMensagemAtiva() == True:
                             self.rectP1 = pygame.Rect(lista_de_colisao[0])
                             self.rectP2 = pygame.Rect(lista_de_colisao[1])
@@ -213,12 +214,12 @@ class Level1:
         self.larguraTela = 960
         self.alturaTela = 680
         self.x = 30
-        self.y = 30
+        self.y = 65
         self.tela = pygame.display.set_mode((self.larguraTela, self.alturaTela))
 
         # Variável da fonte
         self.fonte = pygame.font.SysFont("Arial", 20, True, False)
-        self.plano_de_fundo = pygame.image.load('img/Fundo1.1.png')
+        self.plano_de_fundo = pygame.image.load('img/Fase1.png')
 
         # Definindo specs inimigo
         self.skin_inimigo = pygame.image.load('img/Virus01.png').convert_alpha()
@@ -378,7 +379,7 @@ class Level2:
 
         # Variável da fonte
         self.fonte = pygame.font.SysFont("Arial", 20, True, False)
-        self.plano_de_fundo = pygame.image.load('img/Fundo1.1.png')
+        self.plano_de_fundo = pygame.image.load('img/Fase2.png')
 
         # Definindo specs inimigo
         self.skin_inimigo = pygame.image.load('img/Virus01.png').convert_alpha()
