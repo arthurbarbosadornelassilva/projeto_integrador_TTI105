@@ -54,7 +54,7 @@ class TelaLogin:
     pygame.init()
 
     #fontees
-    font1 = pygame.font.Font('PixelifySans-Bold.ttf', 85)
+    font1 = pygame.font.Font('font/PixelifySans-Bold.ttf', 85)
 
     # Criar a tela
     WIDTH, HEIGHT = 960, 680
@@ -63,7 +63,7 @@ class TelaLogin:
 
 
     # Cor de fundo
-    bg_image = pygame.image.load("fundo1.png")
+    bg_image = pygame.image.load("img/fundoofc.png")
     bg_image = pygame.transform.scale(bg_image, (WIDTH, HEIGHT))
 
 
