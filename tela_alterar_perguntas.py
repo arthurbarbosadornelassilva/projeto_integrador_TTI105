@@ -205,6 +205,6 @@ tree.bind("<ButtonRelease-1>", fill_fields)
 
 
 fetch_questions()
-update_response_fields()  # Initial call to display the default number of response fields
+update_response_fields()  
 tela.mainloop()
 
