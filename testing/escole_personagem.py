@@ -1,7 +1,7 @@
 import pygame
 import sys
 
-class Personagem:
+class EscolhePersonagem:
 
     def __init__(self):
         # Inicializa o Pygame
