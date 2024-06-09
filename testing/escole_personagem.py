@@ -116,6 +116,6 @@ class EscolhePersonagem:
             pygame.display.flip()
 
 if __name__ == "__main__":
-    jogo = Personagem()
+    jogo = EscolhePersonagem()
     jogo.main_screen()
     pygame.quit()
