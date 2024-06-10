@@ -15,7 +15,6 @@ def salvar_cadastro():
     existe = dao.existeAluno(nome, email)[0]
 
     if existe == 1 or  "@piaget.com" not in email:
-        
         messagebox.showerror("Falha no cadastro", "Nome ou email inválidos")
     else:
         messagebox.showinfo("Cadastro realizado", "Suas informações foram cadastradas com sucesso")

@@ -1,8 +1,6 @@
 import pygame
 
 class TelaCadastro:
-    
-
     # Função para criar um botão com bordas arredondadas
     def create_rounded_button(x, y, width, height, color, radius, text=" ", text_color=(0, 0, 0), font_size=30):
         button = {}  # Dicionário para armazenar os atributos do botão
@@ -61,18 +59,15 @@ class TelaCadastro:
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Tela inicial")
 
-
     # Cor de fundo
     bg_image = pygame.image.load("img/fundoofc.png")
     bg_image = pygame.transform.scale(bg_image, (WIDTH, HEIGHT))
-
 
     # Criar o botão
     button_radius = 20  # Define o raio para os cantos arredondados do botão
     cadastro_aluno_button = create_rounded_button(380, 410, 240, 60, (106, 13, 173), button_radius, text="Cadastro Aluno", text_color=(255, 255, 255), font_size=40)
     cadastro_prof_button = create_rounded_button(380, 480, 240, 60, (106, 13, 173), button_radius, text="Cadastro Prof", text_color=(255, 255, 255), font_size=40)
     voltar_button = create_rounded_button(470, 570, 80, 40, (106, 13, 173), button_radius, text="voltar", text_color=(255, 255, 255), font_size=30)
-
 
     # Loop principal
     running = True

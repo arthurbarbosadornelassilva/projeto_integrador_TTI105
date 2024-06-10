@@ -200,7 +200,7 @@ tree.column("questao", anchor=tk.CENTER, width=420)
 tree.heading("id", text='ID')
 tree.heading("dificuldade", text='Dificuldade')
 tree.heading("questao", text='Questão')
-tree.place(x=560, y=20)
+tree.place(x=360, y=20)
 tree.bind("<ButtonRelease-1>", fill_fields)
 
 

@@ -1,8 +1,6 @@
 import pygame
 
 class TelaInicial:
-    
-
     # Função para criar um botão com bordas arredondadas
     def create_rounded_button(x, y, width, height, color, radius, text=" ", text_color=(0, 0, 0), font_size=30):
         button = {}  # Dicionário para armazenar os atributos do botão
@@ -63,7 +61,7 @@ class TelaInicial:
 
 
     # Cor de fundo
-    bg_image = pygame.image.load("img/fundo1.png")
+    bg_image = pygame.image.load("img/fundoofc.png")
     bg_image = pygame.transform.scale(bg_image, (WIDTH, HEIGHT))
 
 

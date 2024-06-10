@@ -1,5 +1,5 @@
 from Classes import DAO
-from pygame import font, Surface, Rect
+from pygame import font, Surface, Rect, mixer
 
 class Resposta():
     #Atributos
@@ -42,7 +42,7 @@ class Resposta():
                 x += resposta.get_width() + espaco
             x = self.__coordenadaX
             adicionalY += resposta.get_height() + 25
-            if len(self.__listaDeColisao) < 3:
+            if len(self.__listaDeColisao) < 5:
                 self.__listaDeColisao.append(rectColisao)
 
             if self.__listaRespostaCorreta[self.__respostas.index(i)]:
@@ -53,29 +53,12 @@ class Resposta():
         if escolha == self.__respostaCorreta:
             dao.registrarAcerto(nomeJogador, emailJogador)
             self.__qtdAcertos += 1
-            print("Acerto")
+            mixer.Sound('sound\Sucesso.mp3').play()
+            return 0
         else:
-            #vida -= 1 -> atributo da classe jogo
             dao.registrarErro(idPergunta)
-            print("Erro")
-    
-    def exibrErro(self, escolha, tela):
-        letras = ("A) ", "B) ", "C) ", "D) ", "E) ")
-        fonte = font.Font(self.__fonte, self.__tamanhoFonte)
-        rect = self.__listaDeColisao[escolha]
-
-        espaco = fonte.size(' ')[0]
-        larguraMax, alturaMax = (860, 450)
-        x, y = (self.__coordenadaX, rect[1])
-
-        texto = (letras[escolha] + self.__respostas[escolha]).split()
-        for palavra in texto:
-            resposta = fonte.render(palavra, True, (255, 0, 0))
-            if x + resposta.get_width() > larguraMax:
-                x = self.__coordenadaX
-                y += resposta.get_height()
-            Surface.blit(tela, resposta, (x, y))
-            x += resposta.get_width() + espaco
+            mixer.Sound('sound\Falha.mp3').play()
+            return -1
     
     def alterarRespostas(self, funcao, idPergunta, listaRespostaCorreta, novasRespostas=None):
         dao = DAO.DAO()

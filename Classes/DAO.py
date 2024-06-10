@@ -256,7 +256,7 @@ class DAO():
         cursor = conexao.cursor()
 
         query = ("INSERT INTO professor (nome, email) "
-                 f"VALUES (\'{nome}\', \'{email})\')")
+                 f"VALUES (\'{nome}\', \'{email}\')")
         cursor.execute(query)
         conexao.commit()
 
@@ -269,7 +269,7 @@ class DAO():
         cursor = conexao.cursor()
 
         query = ("SELECT EXISTS (SELECT nome, email FROM professor "
-                 f"WHERE nome = \'{nome}\' AND email = \'{email})\')")
+                 f"WHERE nome = \'{nome}\' AND email = \'{email}\')")
         cursor.execute(query)
 
         for item in cursor:

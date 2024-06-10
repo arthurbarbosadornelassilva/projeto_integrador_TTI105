@@ -1,6 +1,6 @@
 import pygame
 
-class TelaMenu:
+class TelaProf:
     
 
     # Função para criar um botão com bordas arredondadas
@@ -14,7 +14,7 @@ class TelaMenu:
         button['clicked'] = False
         button['text'] = text
         button['text_color'] = text_color
-        button['font'] = pygame.font.SysFont('font/PixelifySans-Regular.ttf', font_size)
+        button['font'] = pygame.font.SysFont(None, font_size)
         button['text_surface'] = button['font'].render(button['text'], True, button['text_color'])
         return button
 
@@ -54,54 +54,37 @@ class TelaMenu:
     pygame.init()
 
     #fontees
-    font1 = pygame.font.Font('font/PixelifySans-Bold.ttf', 45)
-    font2 = pygame.font.Font('font/PixelifySans-Bold.ttf', 85)
-
+    font1 = pygame.font.Font('font/PixelifySans-Bold.ttf', 70)
 
     # Criar a tela
     WIDTH, HEIGHT = 960, 680
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("Tela MENU")
+    pygame.display.set_caption("Tela inicial")
 
 
     # Criar o botão
     button_radius = 20  # Define o raio para os cantos arredondados do botão
-    resume_button = create_rounded_button(380, 350, 240, 60, (106, 13, 173), button_radius, text="Resume", text_color=(255, 255, 255), font_size=40)
-    quit_button = create_rounded_button(380, 440, 240, 60, (106, 13, 173), button_radius, text="Quit", text_color=(255, 255, 255), font_size=40)
-    
+    alterar_pergunta_button = create_rounded_button(350, 320, 250, 60, (106, 13, 173), button_radius, text="Alterar Pergunta", text_color=(255, 255, 255), font_size=40)
+    ver_rank_button = create_rounded_button(350, 390, 250, 60, (106, 13, 173), button_radius, text="Ver Ranking", text_color=(255, 255, 255), font_size=40)
 
-    game_paused = False
+
 
     # Loop principal
     running = True
     while running:
-
-        screen.fill((0,0,0,0))
-        
-        # Desenhar o botão com bordas arredondadas
-        if game_paused == True:
-            draw_text(" MENU", font2, (255,255,255), screen, WIDTH // 1.95, 200 )
-
-            if draw_rounded_button(screen, resume_button):
-                game_paused = False
-            if draw_rounded_button(screen, quit_button):
-                running = False
-        else:
-            draw_text(" Press Space to pause ", font1, (255,255,255), screen, WIDTH // 1.91, 330 )
-
-
         for event in pygame.event.get():
-          if event.type == pygame.KEYDOWN:
-               if event.key == pygame.K_SPACE:
-                    game_paused = True
-        if event.type == pygame.QUIT:
-          running = False
+            if event.type == pygame.QUIT:
+                running = False
+
+        screen.fill((0,0,0))  # Preencher a tela com a cor de fundo
+        draw_text("Bem Vindo Professor(a)", font1, (255,255,255), screen, WIDTH // 1.91,150)
 
 
-
-
-
-
+        # Desenhar o botão com bordas arredondadas
+        if draw_rounded_button(screen, ver_rank_button):
+            print("Botão aluno!")
+        if draw_rounded_button(screen, alterar_pergunta_button):
+            print("Botão prof!")
 
 
         pygame.display.flip()
