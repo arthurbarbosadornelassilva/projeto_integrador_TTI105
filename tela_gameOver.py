@@ -37,7 +37,7 @@ class GameOver:
         cor_padrão = (255, 174, 201, 255)
 
         tela.fill((255,45,70))
-        titulo = fonte.render("Gamer Over", True, (0, 0, 0))
+        titulo = fonte.render("Game Over", True, (0, 0, 0))
 
         tela.blit(titulo, (larguraTela // 2 - titulo.get_width() // 2, 235)) 
 
