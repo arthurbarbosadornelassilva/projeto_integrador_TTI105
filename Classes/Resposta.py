@@ -53,11 +53,11 @@ class Resposta():
         if escolha == self.__respostaCorreta:
             dao.registrarAcerto(nomeJogador, emailJogador)
             self.__qtdAcertos += 1
-            mixer.Sound('sound\Sucesso.mp3').play()
+            mixer.Sound('sound/Sucesso.mp3').play()
             return 0
         else:
             dao.registrarErro(idPergunta)
-            mixer.Sound('sound\Falha.mp3').play()
+            mixer.Sound('sound/Falha.mp3').play()
             return -1
     
     def alterarRespostas(self, funcao, idPergunta, listaRespostaCorreta, novasRespostas=None):

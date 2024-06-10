@@ -247,6 +247,8 @@ class Level1:
 
         # Variável coração
         self.skin_coracao =pygame.image.load('img/Coracao_2.png')
+        # Variável personagem
+        self.skin_personagem = pygame.image.load('img/linf_b.png')
 
         # Definindo os inimigos:
         self.inimigo_atual = None
@@ -270,9 +272,10 @@ class Level1:
 
         self.tela.fill((0, 0, 0))
         self.tela.blit(self.plano_de_fundo, (0, 0))
+        self.tela.blit(self.skin_personagem, (self.x, self.y))
 
         # Definindo protagonista
-        protagonista = pygame.draw.rect(self.tela, (255, 255, 50), (self.x, self.y, lado_x, lado_y))
+        #protagonista = self.skin_personagem.get_rect()
 
         # Definindo mensagemAtiva
         self.mensagemAtiva = pergunta.getMensagemAtiva()
@@ -358,13 +361,13 @@ class Level1:
                         posicao_atual.append(posicao_escolhida)
                         self.ultima_posicao = posicao_escolhida
                         break
-        if respostas.getQtdAcertos != 4:
+        if respostas.getQtdAcertos() < 4:
             inimigo = self.retangulos_inimigos(posicao_atual[0])
             i = inimigo
 
-        if not self.mensagemAtiva and respostas.getQtdAcertos() != 4:
-            self.tela.blit(self.skin_inimigo, i)
-        if respostas.getQtdAcertos() != 4:
+            if not self.mensagemAtiva:
+                self.tela.blit(self.skin_inimigo, i)
+        
             if protagonista.colliderect((i)):
                 self.inimigo_atual = i
                 escolhaFeita = False
@@ -463,8 +466,9 @@ class Level2:
         if respostas.getQtdAcertos() >= 4:
             proxFase = pygame.draw.rect(self.tela, (255, 0, 0), (910, 232, 40, 40))
             if protagonista.colliderect(proxFase):
+                posicao_atual.pop()
                 self.gameStateManager.set_state('level3')
-                respostas.setQtdAcertos(0)                
+                respostas.setQtdAcertos(0)
 
         # Definindo game over
         if vida == 0:
@@ -526,31 +530,31 @@ class Level2:
                         posicao_atual.append(posicao_escolhida)
                         self.ultima_posicao = posicao_escolhida
                         break
-        if respostas.getQtdAcertos != 4:
+        if respostas.getQtdAcertos() < 4:
             inimigo = self.retangulos_inimigos(posicao_atual[0])
             i = inimigo
 
-        if not self.mensagemAtiva and respostas.getQtdAcertos() != 4:
-            self.tela.blit(self.skin_inimigo, i)
-        if protagonista.colliderect((i)):
-            self.inimigo_atual = i
-            escolhaFeita = False
-
             if not self.mensagemAtiva:
-                self.respostas.setListadeColisao([])
-                self.pergunta.definirPergunta(idQuestoesRepetidas)
-                idPergunta = self.pergunta.getIdPergunta()
-                self.respostas.definirRespostas(idPergunta)
-                pergunta.setMensagemAtiva(True)
-            if self.mensagemAtiva:
-                self.pergunta.exibirPergunta(self.tela, 860, 500, (255, 255, 255))
-                altura = self.pergunta.getAlturaTotalPergunta()
-                self.respostas.exibirRespostas(self.tela, altura)
-                for rect in self.respostas.getListaDeColisao():
-                    pygame.draw.rect(self.tela, (0, 0, 255), pygame.Rect(rect))
-            
-            if len(idQuestoesRepetidas) == pergunta.getQuantidadePerguntas()[0]:
-                idQuestoesRepetidas = []
+                self.tela.blit(self.skin_inimigo, i)
+            if protagonista.colliderect((i)):
+                self.inimigo_atual = i
+                escolhaFeita = False
+
+                if not self.mensagemAtiva:
+                    self.respostas.setListadeColisao([])
+                    self.pergunta.definirPergunta(idQuestoesRepetidas)
+                    idPergunta = self.pergunta.getIdPergunta()
+                    self.respostas.definirRespostas(idPergunta)
+                    pergunta.setMensagemAtiva(True)
+                if self.mensagemAtiva:
+                    self.pergunta.exibirPergunta(self.tela, 860, 500, (255, 255, 255))
+                    altura = self.pergunta.getAlturaTotalPergunta()
+                    self.respostas.exibirRespostas(self.tela, altura)
+                    for rect in self.respostas.getListaDeColisao():
+                        pygame.draw.rect(self.tela, (0, 0, 255), pygame.Rect(rect))
+                
+                if len(idQuestoesRepetidas) == pergunta.getQuantidadePerguntas()[0]:
+                    idQuestoesRepetidas = []
 
         # Fita adesiva para o código funcionar
         global lista_de_colisao
@@ -695,7 +699,7 @@ class Level3:
                         posicao_atual.append(posicao_escolhida)
                         self.ultima_posicao = posicao_escolhida
                         break
-        if respostas.getQtdAcertos != 4:
+        if respostas.getQtdAcertos() < 4:
             inimigo = self.retangulos_inimigos(posicao_atual[0])
             i = inimigo
 
@@ -794,10 +798,10 @@ class Level4:
         if respostas.getQtdAcertos() >= 4:
             proxFase = pygame.draw.rect(self.tela, (255, 0, 0), (920, 600, 40, 40))
             if protagonista.colliderect(proxFase):
+                posicao_atual.pop()
                 self.gameStateManager.set_state('level5')
                 pergunta.setDificuldade('Vest')
-                respostas.setQtdAcertos(0)
-                exit()
+                respostas.setQtdAcertos(0)                
 
         # Definindo game over
         if vida == 0:
@@ -865,31 +869,31 @@ class Level4:
                         posicao_atual.append(posicao_escolhida)
                         self.ultima_posicao = posicao_escolhida
                         break
-        if respostas.getQtdAcertos != 4:
+        if respostas.getQtdAcertos() < 4:
             inimigo = self.retangulos_inimigos(posicao_atual[0])
             i = inimigo
 
-        if not self.mensagemAtiva and respostas.getQtdAcertos() != 4:
-            self.tela.blit(self.skin_inimigo, i)
-        if protagonista.colliderect((i)):
-            self.inimigo_atual = i
-            escolhaFeita = False
-
             if not self.mensagemAtiva:
-                self.respostas.setListadeColisao([])
-                self.pergunta.definirPergunta(idQuestoesRepetidas)
-                idPergunta = self.pergunta.getIdPergunta()
-                self.respostas.definirRespostas(idPergunta)
-                pergunta.setMensagemAtiva(True)
-            if self.mensagemAtiva:
-                self.pergunta.exibirPergunta(self.tela, 860, 500, (255, 255, 255))
-                altura = self.pergunta.getAlturaTotalPergunta()
-                self.respostas.exibirRespostas(self.tela, altura)
-                for rect in self.respostas.getListaDeColisao():
-                    pygame.draw.rect(self.tela, (0, 0, 255), pygame.Rect(rect))
-            
-            if len(idQuestoesRepetidas) == pergunta.getQuantidadePerguntas()[0]:
-                idQuestoesRepetidas = []
+                self.tela.blit(self.skin_inimigo, i)
+            if protagonista.colliderect((i)):
+                self.inimigo_atual = i
+                escolhaFeita = False
+
+                if not self.mensagemAtiva:
+                    self.respostas.setListadeColisao([])
+                    self.pergunta.definirPergunta(idQuestoesRepetidas)
+                    idPergunta = self.pergunta.getIdPergunta()
+                    self.respostas.definirRespostas(idPergunta)
+                    pergunta.setMensagemAtiva(True)
+                if self.mensagemAtiva:
+                    self.pergunta.exibirPergunta(self.tela, 860, 500, (255, 255, 255))
+                    altura = self.pergunta.getAlturaTotalPergunta()
+                    self.respostas.exibirRespostas(self.tela, altura)
+                    for rect in self.respostas.getListaDeColisao():
+                        pygame.draw.rect(self.tela, (0, 0, 255), pygame.Rect(rect))
+                
+                if len(idQuestoesRepetidas) == pergunta.getQuantidadePerguntas()[0]:
+                    idQuestoesRepetidas = []
 
         # Fita adesiva para o código funcionar
         global lista_de_colisao
